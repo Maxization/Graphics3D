@@ -10,10 +10,14 @@ namespace Graphics3D
 {
     public static class MatrixGenerator
     {
-        public static Matrix<double> LookAtLH(Vector<double> cameraPosition, Vector<double> cameraTarget, Vector<double> up3D)
+        public static Matrix<double> LookAt(Vector<double> cameraPosition, Vector<double> cameraTarget, Vector<double> up3D)
         {
-            Vector<double> zAxis = (cameraTarget - cameraPosition).Normalize(1);
-            Vector<double> xAxis = up3D.Cross3D(zAxis).Normalize(1);
+            Vector<double> cameraPos = Vector<double>.Build.DenseOfArray(new double[] { cameraPosition[2], cameraPosition[0], cameraPosition[1] });
+            Vector<double> cameraTar = Vector<double>.Build.DenseOfArray(new double[] { cameraTarget[2], cameraTarget[0], cameraTarget[1] });
+            Vector<double> up = Vector<double>.Build.DenseOfArray(new double[] { up3D[2], up3D[0], up3D[1] });
+
+            Vector<double> zAxis = (cameraPos - cameraTar).Normalize(1);
+            Vector<double> xAxis = up.Cross3D(zAxis).Normalize(1);
             Vector<double> yAxis = zAxis.Cross3D(xAxis);
 
             Matrix<double> viewMatrix = DenseMatrix.OfArray(new double[,]
@@ -21,22 +25,22 @@ namespace Graphics3D
                 {xAxis[0], yAxis[0], zAxis[0], 0 },
                 {xAxis[1], yAxis[1], zAxis[1], 0 },
                 {xAxis[2], yAxis[2], zAxis[2], 0 },
-                {-xAxis.DotProduct(cameraPosition), -yAxis.DotProduct(cameraPosition), -zAxis.DotProduct(cameraPosition), 1 }
+                {-xAxis.DotProduct(cameraPos), -yAxis.DotProduct(cameraPos), -zAxis.DotProduct(cameraPos), 1 }
             });
 
-            return viewMatrix;
+            return viewMatrix.Transpose();
         }
-        public static Matrix<double> PerspectiveFovRH(double fov, double aspect, double znear, double zfar)
+        public static Matrix<double> PerspectiveFov(double fov, double aspect, double znear, double zfar)
         {
             double yScale = (double)(1.0f / Math.Tan(fov * 0.5f));
-            double q = zfar / (znear - zfar);
-
+            double q1 = -(zfar + znear) / (zfar - znear);
+            double q2 = -2 * zfar * znear / (zfar - znear);
             Matrix<double> projectMatrix = DenseMatrix.OfArray(new double[,]
             {
-                { yScale/aspect, 0, 0, 0 },
-                {0, yScale, 0, 0 },
-                {0, 0, q, -1.0f},
-                {0, 0, 1*znear, 0 }
+                { yScale, 0, 0, 0 },
+                {0, yScale/aspect, 0, 0 },
+                {0, 0, q1, q2},
+                {0, 0, -1, 0 }
             });
             return projectMatrix;
         }
@@ -70,9 +74,9 @@ namespace Graphics3D
         public static Matrix<double> Translation(Vector<double> v3D)
         {
             Matrix<double> translationMatrix = Matrix<double>.Build.DenseIdentity(4);
-            translationMatrix[3, 0] = v3D[0];
-            translationMatrix[3, 1] = v3D[1];
-            translationMatrix[3, 2] = v3D[2];
+            translationMatrix[0, 3] = v3D[2];
+            translationMatrix[1, 3] = v3D[0];
+            translationMatrix[2, 3] = v3D[1];
 
             return translationMatrix;
 

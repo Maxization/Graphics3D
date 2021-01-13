@@ -26,14 +26,15 @@ namespace Graphics3D
             camera = new Camera();
             device = new Device(bmp);
 
-            mesh.Vertices[0] = Vector<double>.Build.DenseOfArray(new double[] { -1, 1, 1, 1});
-            mesh.Vertices[1] = Vector<double>.Build.DenseOfArray(new double[] { 1, 1, 1, 1 });
-            mesh.Vertices[2] = Vector<double>.Build.DenseOfArray(new double[] { -1, -1, 1, 1 });
-            mesh.Vertices[3] = Vector<double>.Build.DenseOfArray(new double[] { -1, -1, -1, 1 });
-            mesh.Vertices[4] = Vector<double>.Build.DenseOfArray(new double[] { -1, 1, -1, 1 });
-            mesh.Vertices[5] = Vector<double>.Build.DenseOfArray(new double[] { 1, 1, -1, 1 });
-            mesh.Vertices[6] = Vector<double>.Build.DenseOfArray(new double[] { 1, -1, 1, 1 });
-            mesh.Vertices[7] = Vector<double>.Build.DenseOfArray(new double[] { 1, -1, -1, 1 });
+            mesh.Vertices[0] = Vector<double>.Build.DenseOfArray(new double[] { -0.5f, 0.5f, 0.5f, 1});
+            mesh.Vertices[1] = Vector<double>.Build.DenseOfArray(new double[] { 0.5f, 0.5f, 0.5f, 1 });
+            mesh.Vertices[2] = Vector<double>.Build.DenseOfArray(new double[] { -0.5f, -0.5f, 0.5f, 1 });
+            mesh.Vertices[3] = Vector<double>.Build.DenseOfArray(new double[] { -0.5f, -0.5, -0.5f, 1 });
+            mesh.Vertices[4] = Vector<double>.Build.DenseOfArray(new double[] { -0.5f, 0.5f, -0.5f, 1 });
+            mesh.Vertices[5] = Vector<double>.Build.DenseOfArray(new double[] { 0.5f, 0.5f, -0.5f, 1 });
+            mesh.Vertices[6] = Vector<double>.Build.DenseOfArray(new double[] { 0.5f, -0.5f, 0.5f, 1 });
+            mesh.Vertices[7] = Vector<double>.Build.DenseOfArray(new double[] { 0.5f, -0.5f, -0.5f, 1 });
+
             mesh.Rotation = Vector<double>.Build.DenseOfArray(new double[] { 0, 0, 0 });
             mesh.Position = Vector<double>.Build.DenseOfArray(new double[] { 0, 0, 0 });
 
@@ -50,8 +51,8 @@ namespace Graphics3D
                 g.Clear(Color.White);
             }
 
-            //mesh.Rotation = Vector<double>.Build.DenseOfArray(new double[] { mesh.Rotation[0]+0.01f,
-            //    mesh.Rotation[1]+0.01f, mesh.Rotation[2] });
+            mesh.Rotation = Vector<double>.Build.DenseOfArray(new double[] { mesh.Rotation[0]+0.01f,
+                mesh.Rotation[1]+0.01f, mesh.Rotation[2] });
 
             device.Render(camera, mesh);
 
@@ -61,6 +62,13 @@ namespace Graphics3D
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            UpdateScreen();
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            TrackBar trackBar = sender as TrackBar;
+            mesh.Rotation[0] += trackBar.Value/10f;
             UpdateScreen();
         }
     }
