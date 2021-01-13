@@ -15,16 +15,25 @@ namespace Graphics3D
 
     }
 
+    public struct Face
+    {
+        public int A;
+        public int B;
+        public int C;
+    }
+
     public class Mesh
     {
         public string Name { get; set; }
         public Vector<double>[] Vertices { get; private set; }
+        public Face[] Faces { get; set; }
         public Vector<double> Position { get; set; }
         public Vector<double> Rotation { get; set; }
 
-        public Mesh(string name, int verticesCount)
+        public Mesh(string name, int verticesCount, int faceCount)
         {
             Vertices = new Vector<double>[verticesCount];
+            Faces = new Face[faceCount];
             Name = name;
         }
     }

@@ -39,11 +39,7 @@ namespace Graphics3D
         {
             if (coord2D[0] >= 0 && coord2D[1] >= 0 && coord2D[0] < bmp.Width && coord2D[1] < bmp.Height)
             {
-                //bmp.SetPixel((int)coord2D[0], (int)coord2D[1], Color.Black);
-                using(Graphics g = Graphics.FromImage(bmp.Bitmap))
-                {
-                    g.FillRectangle(Brushes.Black, (int)coord2D[0] - 1, (int)coord2D[1] - 1, 3, 3);
-                }
+                bmp.SetPixel((int)coord2D[0], (int)coord2D[1], Color.Black);
             }
         }
 
@@ -54,16 +50,24 @@ namespace Graphics3D
 
             foreach (Mesh mesh in meshes)
             {
-                Matrix<double> worldMatrix = MatrixGenerator.RotationYawPitchRoll(mesh.Rotation[0], mesh.Rotation[2], mesh.Rotation[1]) *
-                    MatrixGenerator.Translation(mesh.Position);
+                Matrix<double> worldMatrix = MatrixGenerator.Translation(mesh.Position) *
+                    MatrixGenerator.RotationYawPitchRoll(mesh.Rotation[0], mesh.Rotation[2], mesh.Rotation[1]);
 
                 Matrix<double> transformMatrix = projectMatrix.Multiply(viewMatrix).Multiply(worldMatrix);
 
-                for (int i = 0;i < mesh.Vertices.Length - 1;i++)
+                foreach(Face face in mesh.Faces)
                 {
-                    var point0 = Project(mesh.Vertices[i], transformMatrix);
-                    var point1 = Project(mesh.Vertices[i + 1], transformMatrix);
-                    DrawLine(point0, point1);
+                    Vector<double> v1 = mesh.Vertices[face.A];
+                    Vector<double> v2 = mesh.Vertices[face.B];
+                    Vector<double> v3 = mesh.Vertices[face.C];
+
+                    Vector<double> p1 = Project(v1, transformMatrix);
+                    Vector<double> p2 = Project(v2, transformMatrix);
+                    Vector<double> p3 = Project(v3, transformMatrix);
+
+                    DrawLine(p1, p2);
+                    DrawLine(p2, p3);
+                    DrawLine(p3, p1);
                 }
             }
         }
