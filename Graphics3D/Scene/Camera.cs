@@ -25,7 +25,7 @@ namespace Graphics3D
     public class Mesh
     {
         public string Name { get; set; }
-        public Vertex[] Vertices { get; private set; }
+        public Vertex[] Vertices { get; set; }
         public Face[] Faces { get; set; }
         public Vector3D Position { get; set; }
         public Vector3D Rotation { get; set; }
@@ -34,6 +34,8 @@ namespace Graphics3D
         {
             Vertices = new Vertex[verticesCount];
             Faces = new Face[faceCount];
+            Rotation = new Vector3D(0, 0, 0);
+            Position = new Vector3D(0, 0, 0);
             Name = name;
         }
     }

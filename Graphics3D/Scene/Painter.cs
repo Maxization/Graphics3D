@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using Graphics3D.LightModels;
+using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,7 +29,8 @@ namespace Graphics3D
         {
             return Math.Abs((B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X)) / 2f;
         }
-        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, Device device)
+
+        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, GouraudLightModel lightModel, Device device)
         {
             List<NodeAET>[] ET;
             Point3D p1 = new Point3D(v1.Coordinates);
@@ -36,6 +38,13 @@ namespace Graphics3D
             Point3D p3 = new Point3D(v3.Coordinates);
             float area = CalculateTriangleArea(p1, p2, p3);
             int edgeCounter;
+
+            //For now
+            GouraudLightModel lm = new GouraudLightModel();
+            Vector3D lightPos = new Vector3D(0, 10, 10);
+            lm.CalculateConst(v1, v2, v3, lightPos);
+            //
+
             (ET, edgeCounter) = createET(p1, p2, p3);
 
             int y = 0;
@@ -70,7 +79,10 @@ namespace Graphics3D
                     for (int x = xMin; x <= xMax; x++)
                     {
                         float z = InterpolateZ(p1, p2, p3, area, x, y);
-                        device.PutPixel(x, y, z, color);
+                        //
+                        Color col = lm.GetColor(color, lightPos, x, y);
+                        //
+                        device.PutPixel(x, y, z, col);
                     }
                 }
 

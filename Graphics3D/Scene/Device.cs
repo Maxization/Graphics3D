@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
+using Graphics3D.LightModels;
 
 namespace Graphics3D
 {
@@ -69,11 +70,6 @@ namespace Graphics3D
             };
         }
 
-        public void DrawLine(Point3D p1, Point3D p2, Color color)
-        {
-            Painter.DrawLine(p1, p2, color, this);
-        }
-
         public void PutPixel(int x, int y, float z, Color color)
         {
             if(x< 0 || y<0 || x>=RenderWidth || y>=RenderHeight)
@@ -114,14 +110,15 @@ namespace Graphics3D
                      v2 = Project(v2, transformMatrix, worldMatrix);
                      v3 = Project(v3, transformMatrix, worldMatrix);
 
-                     Painter.FillTriangle(v1,v2,v3, Color.Gray, this);
+                     GouraudLightModel lm = new GouraudLightModel();
+                     Painter.FillTriangle(v1,v2,v3, Color.White, lm, this);
 
-                     Point3D p1 = new Point3D(v1.Coordinates);
-                     Point3D p2 = new Point3D(v2.Coordinates);
-                     Point3D p3 = new Point3D(v3.Coordinates);
-                     DrawLine(p1, p2, Color.Black);
-                     DrawLine(p1, p3, Color.Black);
-                     DrawLine(p2, p3, Color.Black);
+                     //Point3D p1 = new Point3D(v1.Coordinates);
+                     //Point3D p2 = new Point3D(v2.Coordinates);
+                     //Point3D p3 = new Point3D(v3.Coordinates);
+                     //Painter.DrawLine(p1, p2, Color.Black, this);
+                     //Painter.DrawLine(p1, p3, Color.Black, this);
+                     //Painter.DrawLine(p2, p3, Color.Black, this);
                  });
             }
         }
@@ -172,7 +169,7 @@ namespace Graphics3D
                     Vector3D pos = new Vector3D(x, y, z);
                     if (positions.Contains(pos))
                     {
-                        normals[pos].Add(normal);
+                        normals[pos] = normals[pos] + normal;
                     }
                     else
                     {
@@ -183,8 +180,10 @@ namespace Graphics3D
                 }
 
                 var mesh = new Mesh(jsonObject.meshes[meshIndex].name.Value, positions.Count, facesCount);
+                var points = positions.ToArray();
                 int ind = 0;
-                foreach(var pos in positions)
+
+                foreach(var pos in points)
                 {
                     Vector3D normal = normals[pos];
                     normal.Normalize();
@@ -197,7 +196,7 @@ namespace Graphics3D
                     ind++;
                 }
 
-                var points = positions.ToArray();
+                
                 // Then filling the Faces array
                 for (var index = 0; index < facesCount; index++)
                 {

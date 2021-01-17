@@ -33,18 +33,27 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.labelFPS = new System.Windows.Forms.Label();
+            this.trackBarX = new System.Windows.Forms.TrackBar();
+            this.trackBarZ = new System.Windows.Forms.TrackBar();
+            this.trackBarY = new System.Windows.Forms.TrackBar();
+            this.trackBarPosX = new System.Windows.Forms.TrackBar();
+            this.trackBarPosY = new System.Windows.Forms.TrackBar();
+            this.trackBarPosZ = new System.Windows.Forms.TrackBar();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 10;
+            this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // tableLayoutPanel1
@@ -75,39 +84,88 @@
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.trackBar1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.labelFPS, 0, 2);
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Controls.Add(this.trackBarPosZ, 0, 5);
+            this.tableLayoutPanel2.Controls.Add(this.trackBarPosY, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.trackBarPosX, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.trackBarY, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.trackBarZ, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.trackBarX, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(955, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 5.960265F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 94.03973F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
+            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 94F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 84F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 77F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 93F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 146F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(226, 755);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
-            // trackBar1
+            // trackBarX
             // 
-            this.trackBar1.Location = new System.Drawing.Point(3, 3);
-            this.trackBar1.Maximum = 50;
-            this.trackBar1.Minimum = -50;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(218, 36);
-            this.trackBar1.TabIndex = 3;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            this.trackBarX.Location = new System.Drawing.Point(3, 3);
+            this.trackBarX.Maximum = 50;
+            this.trackBarX.Minimum = -50;
+            this.trackBarX.Name = "trackBarX";
+            this.trackBarX.Size = new System.Drawing.Size(218, 45);
+            this.trackBarX.TabIndex = 3;
+            this.trackBarX.Scroll += new System.EventHandler(this.trackBarX_Scroll);
             // 
-            // labelFPS
+            // trackBarZ
             // 
-            this.labelFPS.AutoSize = true;
-            this.labelFPS.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelFPS.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelFPS.Location = new System.Drawing.Point(3, 708);
-            this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(220, 47);
-            this.labelFPS.TabIndex = 4;
-            this.labelFPS.Text = "FPS: ";
+            this.trackBarZ.Location = new System.Drawing.Point(3, 174);
+            this.trackBarZ.Maximum = 50;
+            this.trackBarZ.Minimum = -50;
+            this.trackBarZ.Name = "trackBarZ";
+            this.trackBarZ.Size = new System.Drawing.Size(218, 45);
+            this.trackBarZ.TabIndex = 4;
+            this.trackBarZ.Scroll += new System.EventHandler(this.trackBarZ_Scroll);
+            // 
+            // trackBarY
+            // 
+            this.trackBarY.Location = new System.Drawing.Point(3, 80);
+            this.trackBarY.Maximum = 50;
+            this.trackBarY.Minimum = -50;
+            this.trackBarY.Name = "trackBarY";
+            this.trackBarY.Size = new System.Drawing.Size(218, 45);
+            this.trackBarY.TabIndex = 5;
+            this.trackBarY.Scroll += new System.EventHandler(this.trackBarY_Scroll);
+            // 
+            // trackBarPosX
+            // 
+            this.trackBarPosX.Location = new System.Drawing.Point(3, 258);
+            this.trackBarPosX.Maximum = 50;
+            this.trackBarPosX.Minimum = -50;
+            this.trackBarPosX.Name = "trackBarPosX";
+            this.trackBarPosX.Size = new System.Drawing.Size(218, 45);
+            this.trackBarPosX.TabIndex = 6;
+            this.trackBarPosX.Scroll += new System.EventHandler(this.trackBarPosX_Scroll);
+            // 
+            // trackBarPosY
+            // 
+            this.trackBarPosY.Location = new System.Drawing.Point(3, 335);
+            this.trackBarPosY.Maximum = 50;
+            this.trackBarPosY.Minimum = -50;
+            this.trackBarPosY.Name = "trackBarPosY";
+            this.trackBarPosY.Size = new System.Drawing.Size(218, 45);
+            this.trackBarPosY.TabIndex = 7;
+            this.trackBarPosY.Scroll += new System.EventHandler(this.trackBarPosY_Scroll);
+            // 
+            // trackBarPosZ
+            // 
+            this.trackBarPosZ.Location = new System.Drawing.Point(3, 428);
+            this.trackBarPosZ.Maximum = 50;
+            this.trackBarPosZ.Minimum = -50;
+            this.trackBarPosZ.Name = "trackBarPosZ";
+            this.trackBarPosZ.Size = new System.Drawing.Size(218, 45);
+            this.trackBarPosZ.TabIndex = 8;
+            this.trackBarPosZ.Scroll += new System.EventHandler(this.trackBarPosZ_Scroll);
             // 
             // Form1
             // 
@@ -121,7 +179,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -131,8 +194,12 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.Label labelFPS;
+        private System.Windows.Forms.TrackBar trackBarX;
+        private System.Windows.Forms.TrackBar trackBarY;
+        private System.Windows.Forms.TrackBar trackBarZ;
+        private System.Windows.Forms.TrackBar trackBarPosZ;
+        private System.Windows.Forms.TrackBar trackBarPosY;
+        private System.Windows.Forms.TrackBar trackBarPosX;
     }
 }
 
