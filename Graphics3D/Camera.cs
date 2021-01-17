@@ -10,8 +10,8 @@ namespace Graphics3D
 {
     public class Camera
     {
-        public Vector<double> Position { get; set; }
-        public Vector<double> Target { get; set; }
+        public Vector3D Position { get; set; }
+        public Vector3D Target { get; set; }
 
     }
 
@@ -25,16 +25,23 @@ namespace Graphics3D
     public class Mesh
     {
         public string Name { get; set; }
-        public Vector<double>[] Vertices { get; private set; }
+        public Vertex[] Vertices { get; private set; }
         public Face[] Faces { get; set; }
-        public Vector<double> Position { get; set; }
-        public Vector<double> Rotation { get; set; }
+        public Vector3D Position { get; set; }
+        public Vector3D Rotation { get; set; }
 
         public Mesh(string name, int verticesCount, int faceCount)
         {
-            Vertices = new Vector<double>[verticesCount];
+            Vertices = new Vertex[verticesCount];
             Faces = new Face[faceCount];
             Name = name;
         }
+    }
+
+    public struct Vertex
+    {
+        public Vector3D Normal;
+        public Vector3D Coordinates;
+        public Vector3D WorldCoordinates;
     }
 }

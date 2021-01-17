@@ -10,16 +10,16 @@ namespace Graphics3D
     public struct Point3D
     {
         public int X, Y;
-        public double Z;
+        public float Z;
 
-        public Point3D(Vector<double> point)
+        public Point3D(Vector3D point)
         {
-            X = (int)point[0];
-            Y = (int)point[1];
-            Z = point[2];
+            X = (int)point.X;
+            Y = (int)point.Y;
+            Z = point.Z;
         }
 
-        public Point3D(int x, int y, double z)
+        public Point3D(int x, int y, float z)
         {
             X = x;
             Y = y;

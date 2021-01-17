@@ -10,17 +10,17 @@ namespace Graphics3D
 {
     public static class MatrixGenerator
     {
-        public static Matrix<double> LookAt(Vector<double> cameraPosition, Vector<double> cameraTarget, Vector<double> up3D)
+        public static Matrix<float> LookAt(Vector3D cameraPosition, Vector3D cameraTarget, Vector3D up3D)
         {
-            Vector<double> cameraPos = Vector<double>.Build.DenseOfArray(new double[] { cameraPosition[2], cameraPosition[0], cameraPosition[1] });
-            Vector<double> cameraTar = Vector<double>.Build.DenseOfArray(new double[] { cameraTarget[2], cameraTarget[0], cameraTarget[1] });
-            Vector<double> up = Vector<double>.Build.DenseOfArray(new double[] { up3D[2], up3D[0], up3D[1] });
+            Vector<float> cameraPos = Vector<float>.Build.DenseOfArray(new float[] { cameraPosition.Z, cameraPosition.X, cameraPosition.Y });
+            Vector<float> cameraTar = Vector<float>.Build.DenseOfArray(new float[] { cameraTarget.Z, cameraTarget.X, cameraTarget.Y });
+            Vector<float> up = Vector<float>.Build.DenseOfArray(new float[] { up3D.Z, up3D.X, up3D.Y });
 
-            Vector<double> zAxis = (cameraPos - cameraTar).Normalize(1);
-            Vector<double> xAxis = up.Cross3D(zAxis).Normalize(1);
-            Vector<double> yAxis = zAxis.Cross3D(xAxis);
+            Vector<float> zAxis = (cameraPos - cameraTar).Normalize(1);
+            Vector<float> xAxis = up.Cross3D(zAxis).Normalize(1);
+            Vector<float> yAxis = zAxis.Cross3D(xAxis);
 
-            Matrix<double> viewMatrix = DenseMatrix.OfArray(new double[,]
+            Matrix<float> viewMatrix = Matrix<float>.Build.DenseOfArray(new float[,]
             {
                 {xAxis[0], yAxis[0], zAxis[0], 0 },
                 {xAxis[1], yAxis[1], zAxis[1], 0 },
@@ -30,12 +30,12 @@ namespace Graphics3D
 
             return viewMatrix.Transpose();
         }
-        public static Matrix<double> PerspectiveFov(double fov, double aspect, double znear, double zfar)
+        public static Matrix<float> PerspectiveFov(float fov, float aspect, float znear, float zfar)
         {
-            double yScale = (double)(1.0f / Math.Tan(fov * 0.5f));
-            double q1 = -(zfar + znear) / (zfar - znear);
-            double q2 = -2 * zfar * znear / (zfar - znear);
-            Matrix<double> projectMatrix = DenseMatrix.OfArray(new double[,]
+            float yScale = (float)(1.0f / Math.Tan(fov * 0.5f));
+            float q1 = -(zfar + znear) / (zfar - znear);
+            float q2 = -2 * zfar * znear / (zfar - znear);
+            Matrix<float> projectMatrix = Matrix<float>.Build.DenseOfArray(new float[,]
             {
                 { yScale, 0, 0, 0 },
                 {0, yScale/aspect, 0, 0 },
@@ -44,20 +44,20 @@ namespace Graphics3D
             });
             return projectMatrix;
         }
-        public static Matrix<double> RotationYawPitchRoll(double yaw, double pitch, double roll)
+        public static Matrix<float> RotationYawPitchRoll(float yaw, float pitch, float roll)
         {
             Quaternion rotation = Quaternion.RotationYawPitchRoll(yaw, pitch, roll);
-            double xx = rotation.X * rotation.X;
-            double yy = rotation.Y * rotation.Y;
-            double zz = rotation.Z * rotation.Z;
-            double xy = rotation.X * rotation.Y;
-            double zw = rotation.Z * rotation.W;
-            double zx = rotation.Z * rotation.X;
-            double yw = rotation.Y * rotation.W;
-            double yz = rotation.Y * rotation.Z;
-            double xw = rotation.X * rotation.W;
+            float xx = rotation.X * rotation.X;
+            float yy = rotation.Y * rotation.Y;
+            float zz = rotation.Z * rotation.Z;
+            float xy = rotation.X * rotation.Y;
+            float zw = rotation.Z * rotation.W;
+            float zx = rotation.Z * rotation.X;
+            float yw = rotation.Y * rotation.W;
+            float yz = rotation.Y * rotation.Z;
+            float xw = rotation.X * rotation.W;
 
-            Matrix<double> rotationMatrix = Matrix<double>.Build.DenseIdentity(4);
+            Matrix<float> rotationMatrix = Matrix<float>.Build.DenseIdentity(4);
             rotationMatrix[0,0] = 1.0f - (2.0f * (yy + zz)); ;
             rotationMatrix[0, 1] = 2.0f * (xy + zw);
             rotationMatrix[0, 2] = 2.0f * (zx - yw);
@@ -71,12 +71,12 @@ namespace Graphics3D
             return rotationMatrix;
 
         }
-        public static Matrix<double> Translation(Vector<double> v3D)
+        public static Matrix<float> Translation(Vector3D p)
         {
-            Matrix<double> translationMatrix = Matrix<double>.Build.DenseIdentity(4);
-            translationMatrix[0, 3] = v3D[2];
-            translationMatrix[1, 3] = v3D[0];
-            translationMatrix[2, 3] = v3D[1];
+            Matrix<float> translationMatrix = Matrix<float>.Build.DenseIdentity(4);
+            translationMatrix[0, 3] = p.Z;
+            translationMatrix[1, 3] = p.X;
+            translationMatrix[2, 3] = p.Y;
 
             return translationMatrix;
 

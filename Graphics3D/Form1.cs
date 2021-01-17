@@ -17,6 +17,7 @@ namespace Graphics3D
         Device device;
         Mesh[] meshes;
         Camera camera;
+        DateTime previousDate;
         public Form1()
         {
             InitializeComponent();
@@ -24,23 +25,25 @@ namespace Graphics3D
             pictureBox1.Image = bmp.Bitmap;
             camera = new Camera();
             device = new Device(bmp);
-            meshes = device.LoadJSONFileAsync("monkey.babylon");
+            meshes = device.LoadJSONFile("monkey.babylon");
+            meshes[0].Rotation.X += 1.5f;
+            meshes[0].Rotation.Z -= 1.6f;
 
-            camera.Position = Vector<double>.Build.DenseOfArray(new double[] { 0, 0, 5 });
-            camera.Target = Vector<double>.Build.DenseOfArray(new double[] { 0, 0, 0 });
+            camera.Position = new Vector3D(0, 0, 5);
+            camera.Target = new Vector3D(0, 0, 0);
 
             UpdateScreen();
         }
         
         void UpdateScreen()
         {
-            device.Clear();
+            //Calculate FPS
+            var now = DateTime.Now;
+            var currentFPS = 1000.0f / (now - previousDate).TotalMilliseconds;
+            previousDate = now;
+            labelFPS.Text = "FPS: " + string.Format("{0:0.00}", currentFPS);
 
-            foreach (var mesh in meshes)
-            {
-                mesh.Rotation = Vector<double>.Build.DenseOfArray(new double[] { mesh.Rotation[0]+1.5,
-                                                                    mesh.Rotation[1], mesh.Rotation[2] - 1.6});
-            }
+            device.Clear();
 
             device.Render(camera, meshes);
 
@@ -50,12 +53,14 @@ namespace Graphics3D
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            meshes[0].Rotation.Y += 0.05f;
             UpdateScreen();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             TrackBar trackBar = sender as TrackBar;
+            meshes[0].Rotation.Y = trackBar.Value / 10f;
             UpdateScreen();
         }
     }
