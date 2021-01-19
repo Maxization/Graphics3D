@@ -33,21 +33,21 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.trackBarX = new System.Windows.Forms.TrackBar();
-            this.trackBarZ = new System.Windows.Forms.TrackBar();
-            this.trackBarY = new System.Windows.Forms.TrackBar();
-            this.trackBarPosX = new System.Windows.Forms.TrackBar();
-            this.trackBarPosY = new System.Windows.Forms.TrackBar();
             this.trackBarPosZ = new System.Windows.Forms.TrackBar();
+            this.trackBarPosY = new System.Windows.Forms.TrackBar();
+            this.trackBarPosX = new System.Windows.Forms.TrackBar();
+            this.trackBarY = new System.Windows.Forms.TrackBar();
+            this.trackBarZ = new System.Windows.Forms.TrackBar();
+            this.trackBarX = new System.Windows.Forms.TrackBar();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -107,45 +107,15 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(226, 755);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
-            // trackBarX
+            // trackBarPosZ
             // 
-            this.trackBarX.Location = new System.Drawing.Point(3, 3);
-            this.trackBarX.Maximum = 50;
-            this.trackBarX.Minimum = -50;
-            this.trackBarX.Name = "trackBarX";
-            this.trackBarX.Size = new System.Drawing.Size(218, 45);
-            this.trackBarX.TabIndex = 3;
-            this.trackBarX.Scroll += new System.EventHandler(this.trackBarX_Scroll);
-            // 
-            // trackBarZ
-            // 
-            this.trackBarZ.Location = new System.Drawing.Point(3, 174);
-            this.trackBarZ.Maximum = 50;
-            this.trackBarZ.Minimum = -50;
-            this.trackBarZ.Name = "trackBarZ";
-            this.trackBarZ.Size = new System.Drawing.Size(218, 45);
-            this.trackBarZ.TabIndex = 4;
-            this.trackBarZ.Scroll += new System.EventHandler(this.trackBarZ_Scroll);
-            // 
-            // trackBarY
-            // 
-            this.trackBarY.Location = new System.Drawing.Point(3, 80);
-            this.trackBarY.Maximum = 50;
-            this.trackBarY.Minimum = -50;
-            this.trackBarY.Name = "trackBarY";
-            this.trackBarY.Size = new System.Drawing.Size(218, 45);
-            this.trackBarY.TabIndex = 5;
-            this.trackBarY.Scroll += new System.EventHandler(this.trackBarY_Scroll);
-            // 
-            // trackBarPosX
-            // 
-            this.trackBarPosX.Location = new System.Drawing.Point(3, 258);
-            this.trackBarPosX.Maximum = 50;
-            this.trackBarPosX.Minimum = -50;
-            this.trackBarPosX.Name = "trackBarPosX";
-            this.trackBarPosX.Size = new System.Drawing.Size(218, 45);
-            this.trackBarPosX.TabIndex = 6;
-            this.trackBarPosX.Scroll += new System.EventHandler(this.trackBarPosX_Scroll);
+            this.trackBarPosZ.Location = new System.Drawing.Point(3, 428);
+            this.trackBarPosZ.Maximum = 50;
+            this.trackBarPosZ.Minimum = -50;
+            this.trackBarPosZ.Name = "trackBarPosZ";
+            this.trackBarPosZ.Size = new System.Drawing.Size(218, 45);
+            this.trackBarPosZ.TabIndex = 8;
+            this.trackBarPosZ.Scroll += new System.EventHandler(this.trackBarPosZ_Scroll);
             // 
             // trackBarPosY
             // 
@@ -157,15 +127,45 @@
             this.trackBarPosY.TabIndex = 7;
             this.trackBarPosY.Scroll += new System.EventHandler(this.trackBarPosY_Scroll);
             // 
-            // trackBarPosZ
+            // trackBarPosX
             // 
-            this.trackBarPosZ.Location = new System.Drawing.Point(3, 428);
-            this.trackBarPosZ.Maximum = 50;
-            this.trackBarPosZ.Minimum = -50;
-            this.trackBarPosZ.Name = "trackBarPosZ";
-            this.trackBarPosZ.Size = new System.Drawing.Size(218, 45);
-            this.trackBarPosZ.TabIndex = 8;
-            this.trackBarPosZ.Scroll += new System.EventHandler(this.trackBarPosZ_Scroll);
+            this.trackBarPosX.Location = new System.Drawing.Point(3, 258);
+            this.trackBarPosX.Maximum = 50;
+            this.trackBarPosX.Minimum = -50;
+            this.trackBarPosX.Name = "trackBarPosX";
+            this.trackBarPosX.Size = new System.Drawing.Size(218, 45);
+            this.trackBarPosX.TabIndex = 6;
+            this.trackBarPosX.Scroll += new System.EventHandler(this.trackBarPosX_Scroll);
+            // 
+            // trackBarY
+            // 
+            this.trackBarY.Location = new System.Drawing.Point(3, 80);
+            this.trackBarY.Maximum = 200;
+            this.trackBarY.Minimum = -200;
+            this.trackBarY.Name = "trackBarY";
+            this.trackBarY.Size = new System.Drawing.Size(218, 45);
+            this.trackBarY.TabIndex = 5;
+            this.trackBarY.Scroll += new System.EventHandler(this.trackBarY_Scroll);
+            // 
+            // trackBarZ
+            // 
+            this.trackBarZ.Location = new System.Drawing.Point(3, 174);
+            this.trackBarZ.Maximum = 200;
+            this.trackBarZ.Minimum = -200;
+            this.trackBarZ.Name = "trackBarZ";
+            this.trackBarZ.Size = new System.Drawing.Size(218, 45);
+            this.trackBarZ.TabIndex = 4;
+            this.trackBarZ.Scroll += new System.EventHandler(this.trackBarZ_Scroll);
+            // 
+            // trackBarX
+            // 
+            this.trackBarX.Location = new System.Drawing.Point(3, 3);
+            this.trackBarX.Maximum = 200;
+            this.trackBarX.Minimum = -200;
+            this.trackBarX.Name = "trackBarX";
+            this.trackBarX.Size = new System.Drawing.Size(218, 45);
+            this.trackBarX.TabIndex = 3;
+            this.trackBarX.Scroll += new System.EventHandler(this.trackBarX_Scroll);
             // 
             // Form1
             // 
@@ -179,12 +179,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).EndInit();
             this.ResumeLayout(false);
 
         }

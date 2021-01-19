@@ -50,9 +50,33 @@ namespace Graphics3D
         public void Normalize()
         {
             float len = Length();
+            if (len == 0) return;
             X/= len;
             Y/= len;
             Z/= len;
+        }
+
+        public Vector3D Normalized()
+        {
+            float len = Length();
+            return new Vector3D(X / len, Y / len, Z / len);
+        }
+
+        public static float ComputeNDotL(Vector3D vertex, Vector3D normal, Vector3D lightPosition)
+        {
+            var lightDirection = lightPosition - vertex;
+
+            normal.Normalize();
+            lightDirection.Normalize();
+
+            float dot = Vector3D.Dot(normal, lightDirection);
+            return Math.Max(0, dot);
+        }
+
+        public static float CalculateTriangleArea(Vector3D A, Vector3D B, Vector3D C)
+        {
+            var res = Math.Abs((B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X)) / 2f;
+            return res;
         }
     }
 }

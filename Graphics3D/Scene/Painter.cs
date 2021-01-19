@@ -25,27 +25,18 @@ namespace Graphics3D
     {
         static int MAX_ET = 1000;
 
-        private static float CalculateTriangleArea(Point3D A, Point3D B, Point3D C)
-        {
-            return Math.Abs((B.X - A.X) * (C.Y - A.Y) - (B.Y - A.Y) * (C.X - A.X)) / 2f;
-        }
-
-        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, GouraudLightModel lightModel, Device device)
+        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, ILightModel lightModel, Device device)
         {
             List<NodeAET>[] ET;
-            Point3D p1 = new Point3D(v1.Coordinates);
-            Point3D p2 = new Point3D(v2.Coordinates);
-            Point3D p3 = new Point3D(v3.Coordinates);
-            float area = CalculateTriangleArea(p1, p2, p3);
+            float area = Vector3D.CalculateTriangleArea(v1.Coordinates, v2.Coordinates, v3.Coordinates);
             int edgeCounter;
 
             //For now
-            GouraudLightModel lm = new GouraudLightModel();
             Vector3D lightPos = new Vector3D(0, 10, 10);
-            lm.CalculateConst(v1, v2, v3, lightPos);
+            lightModel.CalculateConst(v1, v2, v3, lightPos);
             //
 
-            (ET, edgeCounter) = createET(p1, p2, p3);
+            (ET, edgeCounter) = createET(v1.Coordinates, v2.Coordinates, v3.Coordinates);
 
             int y = 0;
             while (ET[y] == null)
@@ -71,16 +62,16 @@ namespace Graphics3D
                     else return 1;
                 });
 
-                for (int i = 0; i < AET.Count - 1; i += 2)
+                for (int i = 0; i < AET.Count; i += 2)
                 {
                     int xMin = (int)AET[i].X;
-                    int xMax = (int)AET[i + 1].X;
+                    int xMax = (int)AET[i+1].X;
 
                     for (int x = xMin; x <= xMax; x++)
                     {
-                        float z = InterpolateZ(p1, p2, p3, area, x, y);
+                        float z = InterpolateZ(v1.Coordinates, v2.Coordinates, v3.Coordinates, area, x, y);
                         //
-                        Color col = lm.GetColor(color, lightPos, x, y);
+                        Color col = lightModel.GetColor(color, x, y);
                         //
                         device.PutPixel(x, y, z, col);
                     }
@@ -95,8 +86,15 @@ namespace Graphics3D
                 }
             }
         }
-        private static (List<NodeAET>[], int) createET(params Point3D[] points)
+        private static (List<NodeAET>[], int) createET(Vector3D v1, Vector3D v2, Vector3D v3)
         {
+            Point[] points = new Point[]
+            {
+                new Point((int)(v1.X), (int)(v1.Y)),
+                new Point((int)(v2.X), (int)(v2.Y)),
+                new Point((int)(v3.X), (int)(v3.Y))
+            };
+
             int edgeCounter = 0;
             List<NodeAET>[] ET = new List<NodeAET>[MAX_ET];
             for (int i = 0; i < 2; i++)
@@ -134,11 +132,11 @@ namespace Graphics3D
                 }
             return (ET, edgeCounter);
         }
-        private static float InterpolateZ(Point3D p1, Point3D p2, Point3D p3, float area, int x, int y)
+        private static float InterpolateZ(Vector3D p1, Vector3D p2, Vector3D p3, float area, int x, int y)
         {
-            float a1 = CalculateTriangleArea(new Point3D(x, y, 1), p1, p2);
-            float a2 = CalculateTriangleArea(new Point3D(x, y, 1), p3, p2);
-            float a3 = CalculateTriangleArea(new Point3D(x, y, 1), p3, p1);
+            float a1 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), p1, p2);
+            float a2 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), p3, p2);
+            float a3 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), p3, p1);
 
             float alfa = a1 / area;
             float beta = a2 / area;
@@ -146,8 +144,11 @@ namespace Graphics3D
 
             return (alfa * p3.Z + beta * p1.Z + gamma * p2.Z);
         }
-        public static void DrawLine(Point3D p1, Point3D p2, Color color, Device device)
+        public static void DrawLine(Vector3D v1, Vector3D v2, Color color, Device device)
         {
+            Point p1 = new Point((int)v1.X, (int)v1.Y);
+            Point p2 = new Point((int)v2.X, (int)v2.Y);
+
             int x = p1.X;
             int y = p1.Y;
             int w = p2.X - p1.X;
@@ -171,7 +172,7 @@ namespace Graphics3D
                 float d1 = (float)Math.Sqrt((p1.X - x) * (p1.X - x) + (p1.Y - y) * (p1.Y - y));
                 float d2 = (float)Math.Sqrt((x - p2.X) * (x - p2.X) + (y - p2.Y) * (y - p2.Y));
 
-                float z = (d2 * p1.Z + d1 * p2.Z) / (d1 + d2);
+                float z = (d2 * v1.Z + d1 * v2.Z) / (d1 + d2);
                 device.PutPixel(x, y, z - 0.00001f, color);
                 numerator += shortest;
                 if (!(numerator < longest))
@@ -188,11 +189,11 @@ namespace Graphics3D
             }
         }
 
-        public static void DrawPoint(Point3D coord3D, Device device)
+        public static void DrawPoint(Vector3D coord3D, Device device)
         {
             if (coord3D.X >= 0 && coord3D.Y >= 0 && coord3D.X < device.RenderWidth && coord3D.Y < device.RenderHeight)
             {
-                device.PutPixel(coord3D.X, coord3D.Y, coord3D.Z, Color.Black);
+                device.PutPixel((int)coord3D.X, (int)coord3D.Y, coord3D.Z, Color.Black);
             }
         }
     }

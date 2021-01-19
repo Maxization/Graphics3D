@@ -1,13 +1,14 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Graphics3D
 {
-    public static class MathNetExtension
+    public static class MathExtension
     {
         public static Vector<float> Cross3D(this Vector<float> v, Vector<float> v2)
         {
@@ -21,8 +22,8 @@ namespace Graphics3D
 
         public static Vector<float> Multiply(this Matrix<float> m1, Vector3D v)
         {
-            Vector<float> vector = Vector<float>.Build.DenseOfArray(new float[] { v.X, v.Y, v.Z, 1 });
-            return m1.Multiply(vector);
+            Vector<float> vector = Vector<float>.Build.DenseOfArray(new float[] { v.Z, v.X, v.Y, 1 });
+            return m1 * vector;
         }
     }
 }
