@@ -25,9 +25,9 @@ namespace Graphics3D
             pictureBox1.Image = bmp.Bitmap;
             camera = new Camera();
             device = new Device(bmp);
-            meshes = device.LoadJSONFile("cube.babylon");
+            meshes = device.LoadJSONFile("monkey.babylon");
 
-            camera.Position = new Vector3D(0, 0, 5);
+            camera.Position = new Vector3D(0, 0, 3);
             camera.Target = new Vector3D(0, 0, 0);
 
             UpdateScreen();
@@ -51,7 +51,7 @@ namespace Graphics3D
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X+ 0.05f, meshes[0].Rotation.Y + 0.05f, meshes[0].Rotation.Z);
+            meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y + 0.05f, meshes[0].Rotation.Z);
             UpdateScreen();
         }
 

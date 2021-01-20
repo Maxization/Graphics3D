@@ -36,6 +36,9 @@ namespace Graphics3D
             int sx = (int)Interpolate(pa.X, pb.X, gradient1);
             int ex = (int)Interpolate(pc.X, pd.X, gradient2);
 
+            var snl = Interpolate(data.ndotla, data.ndotlb, gradient1);
+            var enl = Interpolate(data.ndotlc, data.ndotld, gradient2);
+
             double z1 = Interpolate(pa.Z, pb.Z, gradient1);
             double z2 = Interpolate(pc.Z, pd.Z, gradient2);
 
@@ -44,9 +47,10 @@ namespace Graphics3D
                 double gradient = (x - sx) / (double)(ex - sx);
 
                 double z = Interpolate(z1, z2, gradient);
+                var ndotl = Interpolate(snl, enl, gradient);
 
                 z = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
-                Color col = data.shadingModel.GetColor(color, x, data.currentY);
+                Color col = Color.FromArgb((int)(color.R * ndotl), (int)(color.G * ndotl), (int)(color.B * ndotl));
                 DrawPoint(new Vector3D(x, data.currentY, z), col, device);
             }
         }
@@ -79,7 +83,12 @@ namespace Graphics3D
             Vector3D p2 = v2.Coordinates;
             Vector3D p3 = v3.Coordinates;
 
-            shadingModel.CalculateConst(v1, v2, v3, new Vector3D(0, 10, 10));
+            Vector3D lightPosition = new Vector3D(0, 10, 10);
+            double nl1 = Vector3D.ComputeNDotL(v1.WorldCoordinates, v1.Normal, lightPosition);
+            double nl2 = Vector3D.ComputeNDotL(v2.WorldCoordinates, v2.Normal, lightPosition);
+            double nl3 = Vector3D.ComputeNDotL(v3.WorldCoordinates, v3.Normal, lightPosition);
+
+            shadingModel.CalculateConst(v1, v2, v3, lightPosition);
 
             ScanLineData data = new ScanLineData
             {
@@ -106,10 +115,18 @@ namespace Graphics3D
 
                     if (y < p2.Y)
                     {
+                        data.ndotla = nl1;
+                        data.ndotlb = nl3;
+                        data.ndotlc = nl1;
+                        data.ndotld = nl2;
                         ProcessScanLine(data, v1, v3, v1, v2, color, device);
                     }
                     else
                     {
+                        data.ndotla = nl1;
+                        data.ndotlb = nl3;
+                        data.ndotlc = nl2;
+                        data.ndotld = nl3;
                         ProcessScanLine(data, v1, v3, v2, v3, color, device);
                     }
                 }
@@ -122,10 +139,18 @@ namespace Graphics3D
 
                     if (y < p2.Y)
                     {
+                        data.ndotla = nl1;
+                        data.ndotlb = nl2;
+                        data.ndotlc = nl1;
+                        data.ndotld = nl3;
                         ProcessScanLine(data, v1, v2, v1, v3, color, device);
                     }
                     else
                     {
+                        data.ndotla = nl2;
+                        data.ndotlb = nl3;
+                        data.ndotlc = nl1;
+                        data.ndotld = nl3;
                         ProcessScanLine(data, v2, v3, v1, v3, color, device);
                     }
                 }
@@ -185,5 +210,9 @@ namespace Graphics3D
     {
         public int currentY;
         public IShadingModel shadingModel;
+        public double ndotla;
+        public double ndotlb;
+        public double ndotlc;
+        public double ndotld;
     }
 }
