@@ -8,13 +8,13 @@ namespace Graphics3D
 {
     class Quaternion
     {
-        public float X;
-        public float Y;
-        public float Z;
-        public float W;
+        public double X;
+        public double Y;
+        public double Z;
+        public double W;
 
         public Quaternion() { }
-        public Quaternion(float x, float y, float z, float w)
+        public Quaternion(double x, double y, double z, double w)
         {
             X = x;
             Y = y;
@@ -22,18 +22,18 @@ namespace Graphics3D
             W = w;
         }
 
-        public static Quaternion RotationYawPitchRoll(float yaw, float pitch, float roll)
+        public static Quaternion RotationYawPitchRoll(double yaw, double pitch, double roll)
         {
-            float halfRoll = roll * 0.5f;
-            float halfPitch = pitch * 0.5f;
-            float halfYaw = yaw * 0.5f;
+            double halfRoll = roll * 0.5f;
+            double halfPitch = pitch * 0.5f;
+            double halfYaw = yaw * 0.5f;
 
-            float sinRoll = (float)Math.Sin(halfRoll);
-            float cosRoll = (float)Math.Cos(halfRoll);
-            float sinPitch = (float)Math.Sin(halfPitch);
-            float cosPitch = (float)Math.Cos(halfPitch);
-            float sinYaw = (float)Math.Sin(halfYaw);
-            float cosYaw = (float)Math.Cos(halfYaw);
+            double sinRoll = (double)Math.Sin(halfRoll);
+            double cosRoll = (double)Math.Cos(halfRoll);
+            double sinPitch = (double)Math.Sin(halfPitch);
+            double cosPitch = (double)Math.Cos(halfPitch);
+            double sinYaw = (double)Math.Sin(halfYaw);
+            double cosYaw = (double)Math.Cos(halfYaw);
 
             Quaternion result = new Quaternion();
             result.X = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);

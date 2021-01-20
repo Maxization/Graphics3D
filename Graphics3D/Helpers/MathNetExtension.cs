@@ -10,9 +10,9 @@ namespace Graphics3D
 {
     public static class MathExtension
     {
-        public static Vector<float> Cross3D(this Vector<float> v, Vector<float> v2)
+        public static Vector<double> Cross3D(this Vector<double> v, Vector<double> v2)
         {
-            Vector<float> crossResult = Vector<float>.Build.Dense(3);
+            Vector<double> crossResult = Vector<double>.Build.Dense(3);
             crossResult[0] = v[1] * v2[2] - v[2] * v2[1];
             crossResult[1] = -v[0] * v2[2] + v[2] * v2[0];
             crossResult[2] = v[0] * v2[1] - v[1] * v2[0];
@@ -20,9 +20,9 @@ namespace Graphics3D
             return crossResult;
         }
 
-        public static Vector<float> Multiply(this Matrix<float> m1, Vector3D v)
+        public static Vector<double> Multiply(this Matrix<double> m1, Vector3D v)
         {
-            Vector<float> vector = Vector<float>.Build.DenseOfArray(new float[] { v.Z, v.X, v.Y, 1 });
+            Vector<double> vector = Vector<double>.Build.DenseOfArray(new double[] { v.Z, v.X, v.Y, 1 });
             return m1 * vector;
         }
     }

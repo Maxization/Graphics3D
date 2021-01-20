@@ -15,7 +15,7 @@ namespace Graphics3D
     public class Device
     {
         private DirectBitmap bmp;
-        private float[] zBuffer;
+        private double[] zBuffer;
         private object[] lockBuffer;
         
         public int RenderWidth { get; }
@@ -27,7 +27,7 @@ namespace Graphics3D
             RenderWidth = bmp.Width;
             RenderHeight = bmp.Height;
 
-            zBuffer = new float[RenderHeight * RenderWidth];
+            zBuffer = new double[RenderHeight * RenderWidth];
             lockBuffer = new object[RenderHeight * RenderWidth];
             for (int i = 0; i < lockBuffer.Length; i++)
                 lockBuffer[i] = new object();
@@ -44,21 +44,21 @@ namespace Graphics3D
 
             for(int i=0;i<zBuffer.Length;i++)
             {
-                zBuffer[i] = float.MaxValue;
+                zBuffer[i] = double.MaxValue;
             }
         }
 
-        public Vertex Project(Vertex vertex, Matrix<float> transMat, Matrix<float> world)
+        public Vertex Project(Vertex vertex, Matrix<double> transMat, Matrix<double> world)
         {
-            Vector<float> point2d = transMat.Multiply(vertex.Coordinates);
+            Vector<double> point2d = transMat.Multiply(vertex.Coordinates);
             point2d = point2d.Divide(point2d[point2d.Count - 1]);
-            point2d[2] = (float)(Math.Log(1 * point2d[2] + 1) / Math.Log(1 * 100 + 1) * point2d[2]);
+            point2d[2] = (double)(Math.Log(1 * point2d[2] + 1) / Math.Log(1 * 100 + 1) * point2d[2]);
 
-            Vector<float> point3dWorld = world.Multiply(vertex.Coordinates);
-            Vector<float> normal3dWorld = world.Multiply(vertex.Normal);
+            Vector<double> point3dWorld = world.Multiply(vertex.Coordinates);
+            Vector<double> normal3dWorld = world.Multiply(vertex.Normal);
 
-            float x = (point2d[0] + 1f) / 2f * RenderWidth;
-            float y = (-point2d[1] + 1f) / 2f * RenderHeight;
+            double x = (point2d[0] + 1f) / 2f * RenderWidth;
+            double y = (-point2d[1] + 1f) / 2f * RenderHeight;
 
             return new Vertex
             {
@@ -68,11 +68,8 @@ namespace Graphics3D
             };
         }
 
-        public void PutPixel(int x, int y, float z, Color color)
+        public void PutPixel(int x, int y, double z, Color color)
         {
-            if(x< 0 || y<0 || x>=RenderWidth || y>=RenderHeight)
-                return;
-
             int index = (x + y * RenderWidth);
 
             lock(lockBuffer[index])
@@ -91,64 +88,28 @@ namespace Graphics3D
         {
             var viewMatrix = MatrixGenerator.LookAt(camera.Position, camera.Target, new Vector3D(0,1,0));
 
-            var projectMatrix = MatrixGenerator.PerspectiveFov(1.74f, (float)RenderHeight / RenderWidth, 1f, 100f);
+            var projectMatrix = MatrixGenerator.PerspectiveFov(1.74f, (double)RenderHeight / RenderWidth, 1f, 100f);
 
             foreach (Mesh mesh in meshes)
             {
-                Matrix<float> worldMatrix = MatrixGenerator.Translation(mesh.Position) *
+                Matrix<double> worldMatrix = MatrixGenerator.Translation(mesh.Position) *
                                                                                        MatrixGenerator.RotationYawPitchRoll(mesh.Rotation.X, mesh.Rotation.Z, mesh.Rotation.Y);
+                Matrix<double> transformMatrix = projectMatrix * viewMatrix * worldMatrix;
 
-                Matrix<float> transformMatrix = projectMatrix * viewMatrix * worldMatrix;
+                Parallel.ForEach(mesh.Faces, (Face face) =>
+                 {
+                     Vertex v1 = mesh.Vertices[face.A];
+                     Vertex v2 = mesh.Vertices[face.B];
+                     Vertex v3 = mesh.Vertices[face.C];
 
-                //
-                Random rnd = new Random(2137);
-                //
+                     v1 = Project(v1, transformMatrix, worldMatrix);
+                     v2 = Project(v2, transformMatrix, worldMatrix);
+                     v3 = Project(v3, transformMatrix, worldMatrix);
 
-                foreach (Face face in mesh.Faces)
-                {
-                    Vertex v1 = mesh.Vertices[face.A];
-                    Vertex v2 = mesh.Vertices[face.B];
-                    Vertex v3 = mesh.Vertices[face.C];
+                     IShadingModel lm = new GouraudShadingModel();
+                     Painter.FillTriangle(v1, v2, v3, Color.White, lm, this);
 
-                    if (float.IsNaN(v1.Normal.X) || float.IsNaN(v2.Normal.X) || float.IsNaN(v3.Normal.X))
-                    {
-                        var k = 5;
-                    }
-
-                    v1 = Project(v1, transformMatrix, worldMatrix);
-                    v2 = Project(v2, transformMatrix, worldMatrix);
-                    v3 = Project(v3, transformMatrix, worldMatrix);
-
-                    if(float.IsNaN(v1.Normal.X) || float.IsNaN(v2.Normal.X) || float.IsNaN(v3.Normal.X))
-                    {
-                        var k = 5;
-                    }
-
-
-                    ILightModel lm = new FlatLightModel();
-                    //
-                    Color color = Color.White;// Color.FromArgb(rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256));
-                    //
-                    Painter.FillTriangle(v1, v2, v3, color, lm, this);
-                }
-
-                //Parallel.ForEach(mesh.Faces, (Face face) =>
-                // {
-                //     Vertex v1 = mesh.Vertices[face.A];
-                //     Vertex v2 = mesh.Vertices[face.B];
-                //     Vertex v3 = mesh.Vertices[face.C];
-
-                //     v1 = Project(v1, transformMatrix, worldMatrix);
-                //     v2 = Project(v2, transformMatrix, worldMatrix);
-                //     v3 = Project(v3, transformMatrix, worldMatrix);
-
-                //     ILightModel lm = new FlatLightModel();
-                //     Painter.FillTriangle(v1,v2,v3, Color.White, lm, this);
-
-                //     //Painter.DrawLine(v1.Coordinates, v2.Coordinates, Color.Black, this);
-                //     //Painter.DrawLine(v1.Coordinates, v3.Coordinates, Color.Black, this);
-                //     //Painter.DrawLine(v2.Coordinates, v3.Coordinates, Color.Black, this);
-                // });
+                 });
             }
         }
     
@@ -167,83 +128,59 @@ namespace Graphics3D
 
             for (var meshIndex = 0; meshIndex < jsonObject.meshes.Count; meshIndex++)
             {
-                HashSet<Vector3D> positions = new HashSet<Vector3D>();
-                Dictionary<Vector3D, Vector3D> normals = new Dictionary<Vector3D, Vector3D>();
+                var verticesArray = jsonObject.meshes[meshIndex].vertices;
+                // Faces
+                var indicesArray = jsonObject.meshes[meshIndex].indices;
 
-                var positionsJSONArray = jsonObject.meshes[meshIndex].positions;
-                var normalsJSONArray = jsonObject.meshes[meshIndex].normals;
+                var uvCount = jsonObject.meshes[meshIndex].uvCount.Value;
+                var verticesStep = 1;
 
-                var indicesJSONArray = jsonObject.meshes[meshIndex].indices;
+                // Depending of the number of texture's coordinates per vertex
+                // we're jumping in the vertices array  by 6, 8 & 10 windows frame
+                switch ((int)uvCount)
+                {
+                    case 0:
+                        verticesStep = 6;
+                        break;
+                    case 1:
+                        verticesStep = 8;
+                        break;
+                    case 2:
+                        verticesStep = 10;
+                        break;
+                }
 
-                var verticesStep = 3;
-                var verticesCount = positionsJSONArray.Count / verticesStep;
+                // the number of interesting vertices information for us
+                var verticesCount = verticesArray.Count / verticesStep;
+                // number of faces is logically the size of the array divided by 3 (A, B, C)
+                var facesCount = indicesArray.Count / 3;
+                var mesh = new Mesh(jsonObject.meshes[meshIndex].name.Value, verticesCount, facesCount);
 
-                Vector3D[] verticesJSON = new Vector3D[verticesCount];
-
-                var facesCount = indicesJSONArray.Count / 3;
-
+                // Filling the Vertices array of our mesh first
                 for (var index = 0; index < verticesCount; index++)
                 {
-                    var x = (float)positionsJSONArray[index * verticesStep].Value;
-                    var y = (float)positionsJSONArray[index * verticesStep + 1].Value;
-                    var z = (float)positionsJSONArray[index * verticesStep + 2].Value;
-
-                    var nx = (float)normalsJSONArray[index * verticesStep].Value;
-                    var ny = (float)normalsJSONArray[index * verticesStep + 1].Value;
-                    var nz = (float)normalsJSONArray[index * verticesStep + 2].Value;
-
-                    Vector3D normal = new Vector3D(nx, ny, nz);
-                    Vector3D pos = new Vector3D(x, y, z);
-                    if (positions.Contains(pos))
-                    {
-                        normals[pos] = normals[pos] + normal;
-                    }
-                    else
-                    {
-                        positions.Add(pos);
-                        normals.Add(pos, normal);
-                    }
-
-                    verticesJSON[index] = pos;
+                    var x = (double)verticesArray[index * verticesStep].Value;
+                    var y = (double)verticesArray[index * verticesStep + 1].Value;
+                    var z = (double)verticesArray[index * verticesStep + 2].Value;
+                    // Loading the vertex normal exported by Blender
+                    var nx = (double)verticesArray[index * verticesStep + 3].Value;
+                    var ny = (double)verticesArray[index * verticesStep + 4].Value;
+                    var nz = (double)verticesArray[index * verticesStep + 5].Value;
+                    mesh.Vertices[index] = new Vertex { Coordinates = new Vector3D(x, y, z), Normal = new Vector3D(nx, ny, nz) };
                 }
 
-                var mesh = new Mesh(jsonObject.meshes[meshIndex].name.Value, positions.Count, facesCount);
-                int ind = 0;
-                Vector3D[] points = new Vector3D[positions.Count];
-
-                foreach (var pos in positions)
-                {
-                    Vector3D normal = normals[pos];
-
-                    normal.Normalize();
-
-                    
-                    mesh.Vertices[ind] = new Vertex
-                    {
-                        Coordinates = new Vector3D(pos.X, pos.Y, pos.Z),
-                        Normal = new Vector3D(normal.X, normal.Y, normal.Z),
-                    };
-                    points[ind] = pos;
-                    ind++;
-                }
-
+                // Then filling the Faces array
                 for (var index = 0; index < facesCount; index++)
                 {
-                    var aFromJSON = (int)indicesJSONArray[index * verticesStep].Value;
-                    var bFromJSON = (int)indicesJSONArray[index * verticesStep + 1].Value;
-                    var cFromJSON = (int)indicesJSONArray[index * verticesStep + 2].Value;
-
-                    var a = Array.IndexOf(points, verticesJSON[aFromJSON]);
-                    var b = Array.IndexOf(points, verticesJSON[bFromJSON]);
-                    var c = Array.IndexOf(points, verticesJSON[cFromJSON]);
-
+                    var a = (int)indicesArray[index * 3].Value;
+                    var b = (int)indicesArray[index * 3 + 1].Value;
+                    var c = (int)indicesArray[index * 3 + 2].Value;
                     mesh.Faces[index] = new Face { A = a, B = b, C = c };
                 }
 
+                // Getting the position you've set in Blender
                 var position = jsonObject.meshes[meshIndex].position;
-                var rotation = jsonObject.meshes[meshIndex].rotation;
-                mesh.Position = new Vector3D((float)position[0].Value, (float)position[1].Value, (float)position[2].Value);
-                mesh.Rotation = new Vector3D((float)rotation[0].Value, (float)rotation[1].Value, (float)rotation[2].Value);
+                mesh.Position = new Vector3D((double)position[0].Value, (double)position[1].Value, (double)position[2].Value);
                 meshes.Add(mesh);
             }
 

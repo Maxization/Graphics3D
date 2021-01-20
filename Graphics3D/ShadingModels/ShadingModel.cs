@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace Graphics3D.LightModels
 {
-    public interface ILightModel
+    public interface IShadingModel
     {
         void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Vector3D lightPosition);
         Color GetColor(Color color, int x, int y);
     }
 
-    public struct FlatLightModel : ILightModel
+    public struct FlatShadingModel : IShadingModel
     {
         Vector3D vnFace;
         Vector3D centerPoint;
-        float ndotl;
+        double ndotl;
         public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Vector3D lightPosition)
         {
             vnFace = (v1.Normal + v2.Normal + v3.Normal) / 3f;
@@ -30,11 +30,11 @@ namespace Graphics3D.LightModels
         }
     }
 
-    public struct GouraudLightModel : ILightModel
+    public struct GouraudShadingModel : IShadingModel
     {
         Vertex v1, v2, v3;
-        float area;
-        float i1, i2, i3;
+        double area;
+        double i1, i2, i3;
 
         public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Vector3D lightPosition)
         {
@@ -50,19 +50,19 @@ namespace Graphics3D.LightModels
 
         public Color GetColor(Color color, int x, int y)
         {
-            float i = InterpolateI(area, x, y);
+            double i = InterpolateI(area, x, y);
             return Color.FromArgb((int)(color.R * i), (int)(color.G * i), (int)(color.B * i));
         }
 
-        private float InterpolateI(float area, int x, int y)
+        private double InterpolateI(double area, int x, int y)
         {
-            float a1 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), v1.Coordinates, v2.Coordinates);
-            float a2 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), v3.Coordinates, v2.Coordinates);
-            float a3 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), v3.Coordinates, v1.Coordinates);
+            double a1 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), v1.Coordinates, v2.Coordinates);
+            double a2 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), v3.Coordinates, v2.Coordinates);
+            double a3 = Vector3D.CalculateTriangleArea(new Vector3D(x, y, 1), v3.Coordinates, v1.Coordinates);
 
-            float alfa = a1 / area;
-            float beta = a2 / area;
-            float gamma = a3 / area;
+            double alfa = a1 / area;
+            double beta = a2 / area;
+            double gamma = a3 / area;
 
             return Math.Max(0, Math.Min(1, (alfa * i3) + (beta * i1) + (gamma * i2)));
         }
