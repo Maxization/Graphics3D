@@ -70,7 +70,9 @@
     <Compile Include="Helpers\Quaternion.cs" />
     <Compile Include="Scene\Painter.cs" />
     <Compile Include="Helpers\Vector3D.cs" />
-    <Compile Include="Helpers\MathNetExtension.cs" />
+    <Compile Include="Helpers\MathExtension.cs" />
+    <Compile Include="ShadingModels\ShadingModelEnum.cs" />
+    <Compile Include="ShadingModels\ShadingModelFactory.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -84,6 +86,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Models\cube.babylon" />
+    <None Include="Models\monkey.babylon" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

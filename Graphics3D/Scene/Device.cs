@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
-using Graphics3D.LightModels;
+using Graphics3D.ShadingModels;
 
 namespace Graphics3D
 {
@@ -70,6 +70,9 @@ namespace Graphics3D
 
         public void PutPixel(int x, int y, double z, Color color)
         {
+            if (x < 0 || y < 0 || x >= RenderWidth || y >= RenderHeight)
+                return;
+
             int index = (x + y * RenderWidth);
 
             lock(lockBuffer[index])
@@ -84,7 +87,7 @@ namespace Graphics3D
             }
         }
 
-        public void Render(Camera camera, params Mesh[] meshes)
+        public void Render(Camera camera, ShadingModelEnum shadingType, params Mesh[] meshes)
         {
             var viewMatrix = MatrixGenerator.LookAt(camera.Position, camera.Target, new Vector3D(0,1,0));
 
@@ -95,7 +98,7 @@ namespace Graphics3D
                 Matrix<double> worldMatrix = MatrixGenerator.Translation(mesh.Position) *
                                                                                        MatrixGenerator.RotationYawPitchRoll(mesh.Rotation.X, mesh.Rotation.Z, mesh.Rotation.Y);
                 Matrix<double> transformMatrix = projectMatrix * viewMatrix * worldMatrix;
-
+                
                 Parallel.ForEach(mesh.Faces, (Face face) =>
                  {
                      Vertex v1 = mesh.Vertices[face.A];
@@ -106,8 +109,8 @@ namespace Graphics3D
                      v2 = Project(v2, transformMatrix, worldMatrix);
                      v3 = Project(v3, transformMatrix, worldMatrix);
 
-                     IShadingModel lm = new GouraudShadingModel();
-                     Painter.FillTriangle(v1, v2, v3, Color.White, lm, this);
+                     IShadingModel sm = ShadingModelFactory.Create(shadingType);
+                     Painter.FillTriangle(v1, v2, v3, Color.White, sm, this);
 
                  });
             }

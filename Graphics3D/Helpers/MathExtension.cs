@@ -25,5 +25,23 @@ namespace Graphics3D
             Vector<double> vector = Vector<double>.Build.DenseOfArray(new double[] { v.Z, v.X, v.Y, 1 });
             return m1 * vector;
         }
+
+        public static Vector3D InterpolateVector(Vector3D min, Vector3D max, double gradient)
+        {
+            return new Vector3D
+            {
+                X = Interpolate(min.X, max.X, gradient),
+                Y = Interpolate(min.Y, max.Y, gradient),
+                Z = Interpolate(min.Z, max.Z, gradient),
+            };
+        }
+        public static double Interpolate(double min, double max, double gradient)
+        {
+            return min + (max - min) * Clamp(gradient);
+        }
+        public static double Clamp(double value, double min = 0, double max = 1)
+        {
+            return Math.Max(min, Math.Min(value, max));
+        }
     }
 }

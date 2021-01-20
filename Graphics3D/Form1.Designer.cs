@@ -36,18 +36,17 @@
             this.trackBarPosZ = new System.Windows.Forms.TrackBar();
             this.trackBarPosY = new System.Windows.Forms.TrackBar();
             this.trackBarPosX = new System.Windows.Forms.TrackBar();
-            this.trackBarY = new System.Windows.Forms.TrackBar();
-            this.trackBarZ = new System.Windows.Forms.TrackBar();
-            this.trackBarX = new System.Windows.Forms.TrackBar();
+            this.shadingGroupBox = new System.Windows.Forms.GroupBox();
+            this.radioButtonFlat = new System.Windows.Forms.RadioButton();
+            this.radioButtonGouraud = new System.Windows.Forms.RadioButton();
+            this.radioButtonPhong = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).BeginInit();
+            this.shadingGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
@@ -88,15 +87,13 @@
             this.tableLayoutPanel2.Controls.Add(this.trackBarPosZ, 0, 5);
             this.tableLayoutPanel2.Controls.Add(this.trackBarPosY, 0, 4);
             this.tableLayoutPanel2.Controls.Add(this.trackBarPosX, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.trackBarY, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.trackBarZ, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.trackBarX, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.shadingGroupBox, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(955, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 6;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 94F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 84F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 77F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 93F));
@@ -137,35 +134,55 @@
             this.trackBarPosX.TabIndex = 6;
             this.trackBarPosX.Scroll += new System.EventHandler(this.trackBarPosX_Scroll);
             // 
-            // trackBarY
+            // shadingGroupBox
             // 
-            this.trackBarY.Location = new System.Drawing.Point(3, 80);
-            this.trackBarY.Maximum = 200;
-            this.trackBarY.Minimum = -200;
-            this.trackBarY.Name = "trackBarY";
-            this.trackBarY.Size = new System.Drawing.Size(218, 45);
-            this.trackBarY.TabIndex = 5;
-            this.trackBarY.Scroll += new System.EventHandler(this.trackBarY_Scroll);
+            this.shadingGroupBox.Controls.Add(this.radioButtonPhong);
+            this.shadingGroupBox.Controls.Add(this.radioButtonGouraud);
+            this.shadingGroupBox.Controls.Add(this.radioButtonFlat);
+            this.shadingGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.shadingGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.shadingGroupBox.Name = "shadingGroupBox";
+            this.shadingGroupBox.Size = new System.Drawing.Size(220, 119);
+            this.shadingGroupBox.TabIndex = 9;
+            this.shadingGroupBox.TabStop = false;
+            this.shadingGroupBox.Text = "Shading Model";
             // 
-            // trackBarZ
+            // radioButtonFlat
             // 
-            this.trackBarZ.Location = new System.Drawing.Point(3, 174);
-            this.trackBarZ.Maximum = 200;
-            this.trackBarZ.Minimum = -200;
-            this.trackBarZ.Name = "trackBarZ";
-            this.trackBarZ.Size = new System.Drawing.Size(218, 45);
-            this.trackBarZ.TabIndex = 4;
-            this.trackBarZ.Scroll += new System.EventHandler(this.trackBarZ_Scroll);
+            this.radioButtonFlat.AutoSize = true;
+            this.radioButtonFlat.Checked = true;
+            this.radioButtonFlat.Location = new System.Drawing.Point(7, 20);
+            this.radioButtonFlat.Name = "radioButtonFlat";
+            this.radioButtonFlat.Size = new System.Drawing.Size(42, 17);
+            this.radioButtonFlat.TabIndex = 0;
+            this.radioButtonFlat.TabStop = true;
+            this.radioButtonFlat.Text = "Flat";
+            this.radioButtonFlat.UseVisualStyleBackColor = true;
+            this.radioButtonFlat.CheckedChanged += new System.EventHandler(this.radioButtonFlat_CheckedChanged);
             // 
-            // trackBarX
+            // radioButtonGouraud
             // 
-            this.trackBarX.Location = new System.Drawing.Point(3, 3);
-            this.trackBarX.Maximum = 200;
-            this.trackBarX.Minimum = -200;
-            this.trackBarX.Name = "trackBarX";
-            this.trackBarX.Size = new System.Drawing.Size(218, 45);
-            this.trackBarX.TabIndex = 3;
-            this.trackBarX.Scroll += new System.EventHandler(this.trackBarX_Scroll);
+            this.radioButtonGouraud.AutoSize = true;
+            this.radioButtonGouraud.Location = new System.Drawing.Point(7, 43);
+            this.radioButtonGouraud.Name = "radioButtonGouraud";
+            this.radioButtonGouraud.Size = new System.Drawing.Size(66, 17);
+            this.radioButtonGouraud.TabIndex = 1;
+            this.radioButtonGouraud.TabStop = true;
+            this.radioButtonGouraud.Text = "Gouraud";
+            this.radioButtonGouraud.UseVisualStyleBackColor = true;
+            this.radioButtonGouraud.CheckedChanged += new System.EventHandler(this.radioButtonGouraud_CheckedChanged);
+            // 
+            // radioButtonPhong
+            // 
+            this.radioButtonPhong.AutoSize = true;
+            this.radioButtonPhong.Location = new System.Drawing.Point(7, 66);
+            this.radioButtonPhong.Name = "radioButtonPhong";
+            this.radioButtonPhong.Size = new System.Drawing.Size(56, 17);
+            this.radioButtonPhong.TabIndex = 2;
+            this.radioButtonPhong.TabStop = true;
+            this.radioButtonPhong.Text = "Phong";
+            this.radioButtonPhong.UseVisualStyleBackColor = true;
+            this.radioButtonPhong.CheckedChanged += new System.EventHandler(this.radioButtonPhong_CheckedChanged);
             // 
             // Form1
             // 
@@ -182,9 +199,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarX)).EndInit();
+            this.shadingGroupBox.ResumeLayout(false);
+            this.shadingGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -194,12 +210,13 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TrackBar trackBarX;
-        private System.Windows.Forms.TrackBar trackBarY;
-        private System.Windows.Forms.TrackBar trackBarZ;
         private System.Windows.Forms.TrackBar trackBarPosZ;
         private System.Windows.Forms.TrackBar trackBarPosY;
         private System.Windows.Forms.TrackBar trackBarPosX;
+        private System.Windows.Forms.GroupBox shadingGroupBox;
+        private System.Windows.Forms.RadioButton radioButtonPhong;
+        private System.Windows.Forms.RadioButton radioButtonGouraud;
+        private System.Windows.Forms.RadioButton radioButtonFlat;
     }
 }
 
