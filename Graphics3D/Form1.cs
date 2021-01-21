@@ -27,9 +27,9 @@ namespace Graphics3D
             pictureBox1.Image = bmp.Bitmap;
             camera = new Camera();
             device = new Device(bmp);
-            meshes = device.LoadJSONFile("ball.babylon");
+            meshes = device.LoadJSONFile("cube.babylon");
 
-            camera.Position = new Vector3D(0, 0, 5);
+            camera.Position = new Vector3D(0, 0, 3);
             camera.Target = new Vector3D(0, 0, 0);
 
             shadingType = ShadingModelEnum.Flat;

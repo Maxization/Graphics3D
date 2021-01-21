@@ -37,9 +37,9 @@
             this.trackBarPosY = new System.Windows.Forms.TrackBar();
             this.trackBarPosX = new System.Windows.Forms.TrackBar();
             this.shadingGroupBox = new System.Windows.Forms.GroupBox();
-            this.radioButtonFlat = new System.Windows.Forms.RadioButton();
-            this.radioButtonGouraud = new System.Windows.Forms.RadioButton();
             this.radioButtonPhong = new System.Windows.Forms.RadioButton();
+            this.radioButtonGouraud = new System.Windows.Forms.RadioButton();
+            this.radioButtonFlat = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
@@ -52,7 +52,6 @@
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // tableLayoutPanel1
@@ -147,18 +146,17 @@
             this.shadingGroupBox.TabStop = false;
             this.shadingGroupBox.Text = "Shading Model";
             // 
-            // radioButtonFlat
+            // radioButtonPhong
             // 
-            this.radioButtonFlat.AutoSize = true;
-            this.radioButtonFlat.Checked = true;
-            this.radioButtonFlat.Location = new System.Drawing.Point(7, 20);
-            this.radioButtonFlat.Name = "radioButtonFlat";
-            this.radioButtonFlat.Size = new System.Drawing.Size(42, 17);
-            this.radioButtonFlat.TabIndex = 0;
-            this.radioButtonFlat.TabStop = true;
-            this.radioButtonFlat.Text = "Flat";
-            this.radioButtonFlat.UseVisualStyleBackColor = true;
-            this.radioButtonFlat.CheckedChanged += new System.EventHandler(this.radioButtonFlat_CheckedChanged);
+            this.radioButtonPhong.AutoSize = true;
+            this.radioButtonPhong.Location = new System.Drawing.Point(7, 66);
+            this.radioButtonPhong.Name = "radioButtonPhong";
+            this.radioButtonPhong.Size = new System.Drawing.Size(56, 17);
+            this.radioButtonPhong.TabIndex = 2;
+            this.radioButtonPhong.TabStop = true;
+            this.radioButtonPhong.Text = "Phong";
+            this.radioButtonPhong.UseVisualStyleBackColor = true;
+            this.radioButtonPhong.CheckedChanged += new System.EventHandler(this.radioButtonPhong_CheckedChanged);
             // 
             // radioButtonGouraud
             // 
@@ -172,17 +170,18 @@
             this.radioButtonGouraud.UseVisualStyleBackColor = true;
             this.radioButtonGouraud.CheckedChanged += new System.EventHandler(this.radioButtonGouraud_CheckedChanged);
             // 
-            // radioButtonPhong
+            // radioButtonFlat
             // 
-            this.radioButtonPhong.AutoSize = true;
-            this.radioButtonPhong.Location = new System.Drawing.Point(7, 66);
-            this.radioButtonPhong.Name = "radioButtonPhong";
-            this.radioButtonPhong.Size = new System.Drawing.Size(56, 17);
-            this.radioButtonPhong.TabIndex = 2;
-            this.radioButtonPhong.TabStop = true;
-            this.radioButtonPhong.Text = "Phong";
-            this.radioButtonPhong.UseVisualStyleBackColor = true;
-            this.radioButtonPhong.CheckedChanged += new System.EventHandler(this.radioButtonPhong_CheckedChanged);
+            this.radioButtonFlat.AutoSize = true;
+            this.radioButtonFlat.Checked = true;
+            this.radioButtonFlat.Location = new System.Drawing.Point(7, 20);
+            this.radioButtonFlat.Name = "radioButtonFlat";
+            this.radioButtonFlat.Size = new System.Drawing.Size(42, 17);
+            this.radioButtonFlat.TabIndex = 0;
+            this.radioButtonFlat.TabStop = true;
+            this.radioButtonFlat.Text = "Flat";
+            this.radioButtonFlat.UseVisualStyleBackColor = true;
+            this.radioButtonFlat.CheckedChanged += new System.EventHandler(this.radioButtonFlat_CheckedChanged);
             // 
             // Form1
             // 
