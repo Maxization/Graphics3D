@@ -23,7 +23,8 @@ namespace Graphics3D
         public static Vector<double> Multiply(this Matrix<double> m1, Vector3D v)
         {
             Vector<double> vector = Vector<double>.Build.DenseOfArray(new double[] { v.Z, v.X, v.Y, 1 });
-            return m1 * vector;
+            Vector<double> res = m1 * vector;
+            return res.Divide(res[res.Count - 1]);
         }
 
         public static Vector3D InterpolateVector(Vector3D min, Vector3D max, double gradient)

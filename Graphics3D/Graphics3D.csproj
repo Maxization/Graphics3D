@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LightModels\LightModel.cs" />
     <Compile Include="ShadingModels\ShadingModel.cs" />
     <Compile Include="Scene\Camera.cs" />
     <Compile Include="Scene\Device.cs" />

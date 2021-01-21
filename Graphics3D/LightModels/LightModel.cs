@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Graphics3D.LightModels
 {
+    class Light
+    {
+
+    }
     class LightModel
     {
     }

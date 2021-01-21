@@ -97,10 +97,20 @@ namespace Graphics3D
             {
                 Matrix<double> worldMatrix = MatrixGenerator.Translation(mesh.Position) *
                                                                                        MatrixGenerator.RotationYawPitchRoll(mesh.Rotation.X, mesh.Rotation.Z, mesh.Rotation.Y);
-                Matrix<double> transformMatrix = projectMatrix * viewMatrix * worldMatrix;
+
+                Matrix<double> worldViewMatrix = viewMatrix * worldMatrix;
+                Matrix<double> transformMatrix = projectMatrix * worldViewMatrix;
                 
                 Parallel.ForEach(mesh.Faces, (Face face) =>
                  {
+
+                     Vector<double> transformedNormal = worldViewMatrix.Multiply(face.Normal);
+
+                     if(transformedNormal[2] >= 0)
+                     {
+                         return;
+                     }
+
                      Vertex v1 = mesh.Vertices[face.A];
                      Vertex v2 = mesh.Vertices[face.B];
                      Vertex v3 = mesh.Vertices[face.C];
@@ -184,6 +194,9 @@ namespace Graphics3D
                 // Getting the position you've set in Blender
                 var position = jsonObject.meshes[meshIndex].position;
                 mesh.Position = new Vector3D((double)position[0].Value, (double)position[1].Value, (double)position[2].Value);
+
+                mesh.ComputeFacesNormals();
+
                 meshes.Add(mesh);
             }
 

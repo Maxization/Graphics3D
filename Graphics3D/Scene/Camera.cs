@@ -20,6 +20,8 @@ namespace Graphics3D
         public int A;
         public int B;
         public int C;
+
+        public Vector3D Normal;
     }
 
     public class Mesh
@@ -37,6 +39,20 @@ namespace Graphics3D
             Rotation = new Vector3D(0, 0, 0);
             Position = new Vector3D(0, 0, 0);
             Name = name;
+        }
+
+        public void ComputeFacesNormals()
+        {
+            Parallel.For(0, Faces.Length, faceIndex =>
+            {
+                Face face = Faces[faceIndex];
+                Vertex v1 = Vertices[face.A];
+                Vertex v2 = Vertices[face.B];
+                Vertex v3 = Vertices[face.C];
+
+                Faces[faceIndex].Normal = (v1.Normal + v2.Normal + v3.Normal) / 3.0f;
+                Faces[faceIndex].Normal.Normalize();
+            });
         }
     }
 
