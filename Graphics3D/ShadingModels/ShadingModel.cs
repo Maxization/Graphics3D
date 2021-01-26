@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Graphics3D.LightModels;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Graphics3D.ShadingModels
 {
     public interface IShadingModel
     {
-        void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Vector3D lightPosition);
+        void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights);
         void setOrder(int k);
         void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device);
     }
@@ -18,13 +19,20 @@ namespace Graphics3D.ShadingModels
     {
         Vector3D vnFace;
         Vector3D centerPoint;
-        double ndotl;
+        double[] ndotl;
+        Light[] lights;
         public void setOrder(int k) { }
-        public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Vector3D lightPosition)
+        public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
         {
             vnFace = (v1.Normal + v2.Normal + v3.Normal) / 3f;
             centerPoint = (v1.WorldCoordinates + v2.WorldCoordinates + v3.WorldCoordinates) / 3f;
-            ndotl = Vector3D.ComputeNDotL(centerPoint, vnFace, lightPosition);
+
+            this.lights = lights;
+            ndotl = new double[lights.Length];
+            for(int i=0;i<lights.Length;i++)
+            {
+                ndotl[i] = Vector3D.ComputeNDotL(centerPoint, vnFace, lights[i].position);
+            } 
         }
         public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device)
         {
@@ -49,7 +57,19 @@ namespace Graphics3D.ShadingModels
                 double z = MathExtension.Interpolate(z1, z2, gradient);
                 z = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
 
-                Color col = Color.FromArgb((int)(color.R * ndotl), (int)(color.G * ndotl), (int)(color.B * ndotl));
+                double Ir = 0, Ig = 0, Ib = 0;
+                for(int i=0;i<lights.Length;i++)
+                {
+                    Ir += ndotl[i];
+                    Ig += ndotl[i];
+                    Ib += ndotl[i];
+                }
+
+                Ir = MathExtension.Clamp(Ir);
+                Ig = MathExtension.Clamp(Ig);
+                Ib = MathExtension.Clamp(Ib);
+
+                Color col = Color.FromArgb((int)(color.R * Ir), (int)(color.G * Ig), (int)(color.B * Ib));
                 device.PutPixel(x, y, z, col);
             }
         }
@@ -57,11 +77,12 @@ namespace Graphics3D.ShadingModels
 
     public struct GouraudShadingModel : IShadingModel
     {
-        double nl1, nl2, nl3;
-        public double ndotla;
-        public double ndotlb;
-        public double ndotlc;
-        public double ndotld;
+        double[] nl1, nl2, nl3;
+        public double[] ndotla;
+        public double[] ndotlb;
+        public double[] ndotlc;
+        public double[] ndotld;
+        Light[] lights;
 
         public void setOrder(int k)
         {
@@ -93,11 +114,19 @@ namespace Graphics3D.ShadingModels
                     break;
             }
         }
-        public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Vector3D lightPosition)
+        public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
         {
-            nl1 = Vector3D.ComputeNDotL(v1.WorldCoordinates, v1.Normal, lightPosition);
-            nl2 = Vector3D.ComputeNDotL(v2.WorldCoordinates, v2.Normal, lightPosition);
-            nl3 = Vector3D.ComputeNDotL(v3.WorldCoordinates, v3.Normal, lightPosition);
+            this.lights = lights;
+            nl1 = new double[lights.Length];
+            nl2 = new double[lights.Length];
+            nl3 = new double[lights.Length];
+
+            for(int i=0;i<lights.Length;i++)
+            {
+                nl1[i] = Vector3D.ComputeNDotL(v1.WorldCoordinates, v1.Normal, lights[i].position);
+                nl2[i] = Vector3D.ComputeNDotL(v2.WorldCoordinates, v2.Normal, lights[i].position);
+                nl3[i] = Vector3D.ComputeNDotL(v3.WorldCoordinates, v3.Normal, lights[i].position);
+            }
         }
 
         public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device)
@@ -113,8 +142,14 @@ namespace Graphics3D.ShadingModels
             int sx = (int)MathExtension.Interpolate(pa.X, pb.X, gradient1);
             int ex = (int)MathExtension.Interpolate(pc.X, pd.X, gradient2);
 
-            var snl = MathExtension.Interpolate(ndotla, ndotlb, gradient1);
-            var enl = MathExtension.Interpolate(ndotlc, ndotld, gradient2);
+            double[] snl = new double[lights.Length];
+            double[] enl = new double[lights.Length];
+
+            for(int i=0;i<lights.Length;i++)
+            {
+                snl[i] = MathExtension.Interpolate(ndotla[i], ndotlb[i], gradient1);
+                enl[i] = MathExtension.Interpolate(ndotlc[i], ndotld[i], gradient2);
+            }
 
             double z1 = MathExtension.Interpolate(pa.Z, pb.Z, gradient1);
             double z2 = MathExtension.Interpolate(pc.Z, pd.Z, gradient2);
@@ -124,10 +159,23 @@ namespace Graphics3D.ShadingModels
                 double gradient = (x - sx) / (double)(ex - sx);
 
                 double z = MathExtension.Interpolate(z1, z2, gradient);
-                var ndotl = MathExtension.Interpolate(snl, enl, gradient);
-
                 z = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
-                Color col = Color.FromArgb((int)(color.R * ndotl), (int)(color.G * ndotl), (int)(color.B * ndotl));
+
+                double Ir = 0, Ig = 0, Ib = 0;
+                for (int i = 0; i < lights.Length; i++)
+                {
+                    double ndotl = MathExtension.Interpolate(snl[i], enl[i], gradient);
+                    Ir += ndotl;
+                    Ig += ndotl;
+                    Ib += ndotl;
+                }
+
+                Ir = MathExtension.Clamp(Ir);
+                Ig = MathExtension.Clamp(Ig);
+                Ib = MathExtension.Clamp(Ib);
+                
+                
+                Color col = Color.FromArgb((int)(color.R * Ir), (int)(color.G * Ig), (int)(color.B * Ib));
                 device.PutPixel(x, y, z, col);
             }
         }
@@ -135,10 +183,10 @@ namespace Graphics3D.ShadingModels
 
     public struct PhongShadingModel : IShadingModel
     {
-        Vector3D lightPosition;
-        public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Vector3D lightPosition)
+        Light[] lights;
+        public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
         {
-            this.lightPosition = lightPosition;
+            this.lights = lights;
         }
 
         public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device)
@@ -173,9 +221,20 @@ namespace Graphics3D.ShadingModels
                 Vector3D worldCoord = MathExtension.InterpolateVector(worldCoord1, worldCoord2, gradient);
                 Vector3D normal = MathExtension.InterpolateVector(normal1, normal2, gradient);
 
-                double ndotl = Vector3D.ComputeNDotL(worldCoord, normal, lightPosition);
+                double Ir = 0, Ig = 0, Ib = 0;
+                for (int i=0;i<lights.Length;i++)
+                {
+                    double ndotl = Vector3D.ComputeNDotL(worldCoord, normal, lights[i].position);
+                    Ir += ndotl;
+                    Ig += ndotl;
+                    Ib += ndotl;
+                }
 
-                Color col = Color.FromArgb((int)(color.R * ndotl), (int)(color.G * ndotl), (int)(color.B * ndotl));
+                Ir = MathExtension.Clamp(Ir);
+                Ig = MathExtension.Clamp(Ig);
+                Ib = MathExtension.Clamp(Ib);
+
+                Color col = Color.FromArgb((int)(color.R * Ir), (int)(color.G * Ig), (int)(color.B * Ib));
                 device.PutPixel(x, y, z, col);
             }
         }

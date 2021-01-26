@@ -32,7 +32,7 @@ namespace Graphics3D
             return new Vector3D(v.X / s, v.Y / s, v.Z / s);
         }
 
-        public static Vector3D operator*(float s, Vector3D v)
+        public static Vector3D operator*(double s, Vector3D v)
         {
             return new Vector3D(v.X * s, v.Y * s, v.Z * s);
         }

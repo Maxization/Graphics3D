@@ -1,4 +1,5 @@
-﻿using Graphics3D.ShadingModels;
+﻿using Graphics3D.LightModels;
+using Graphics3D.ShadingModels;
 using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
@@ -38,8 +39,17 @@ namespace Graphics3D
             Vector3D p2 = v2.Coordinates;
             Vector3D p3 = v3.Coordinates;
 
-            Vector3D lightPosition = new Vector3D(0, 10, 10);
-            shadingModel.CalculateConst(v1, v2, v3, lightPosition);
+            //Vector3D lightPosition = new Vector3D(0, 10, 10);
+            Light[] lights = new Light[]
+            {
+                new Light
+                {
+                    position = new Vector3D(0,10,10),
+                    color = Color.White
+                }
+            };
+
+            shadingModel.CalculateConst(v1, v2, v3, lights);
 
             double dP1P2, dP1P3;
 
