@@ -1,4 +1,5 @@
-﻿using Graphics3D.ShadingModels;
+﻿using Graphics3D.LightModels;
+using Graphics3D.ShadingModels;
 using MathNet.Numerics.LinearAlgebra;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace Graphics3D
         Camera camera;
         DateTime previousDate;
         ShadingModelEnum shadingType;
+        ILightModel lightModel;
         public Form1()
         {
             InitializeComponent();
@@ -33,7 +35,9 @@ namespace Graphics3D
             camera.Target = new Vector3D(0, 0, 0);
 
             shadingType = ShadingModelEnum.Flat;
+            lightModel = new PhongLightModel(0.5, 0.5, 0.2, 20);
 
+            meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y + 0.00001f, meshes[0].Rotation.Z);
             UpdateScreen();
         }
         
@@ -47,7 +51,7 @@ namespace Graphics3D
 
             device.Clear();
 
-            device.Render(camera, shadingType, meshes);
+            device.Render(camera, shadingType, lightModel, meshes);
 
             pictureBox1.Invalidate();
 

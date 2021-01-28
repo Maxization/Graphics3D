@@ -12,7 +12,7 @@ namespace Graphics3D
 {
     public static class Painter
     {
-        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, IShadingModel shadingModel, Device device)
+        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, IShadingModel shadingModel, ILightModel lightModel, Vector3D cameraPosition, Device device)
         {
             if (v1.Coordinates.Y > v2.Coordinates.Y)
             {
@@ -39,13 +39,12 @@ namespace Graphics3D
             Vector3D p2 = v2.Coordinates;
             Vector3D p3 = v3.Coordinates;
 
-            //Vector3D lightPosition = new Vector3D(0, 10, 10);
             Light[] lights = new Light[]
             {
                 new Light
                 {
                     position = new Vector3D(0,10,10),
-                    color = Color.White
+                    color = Color.Red
                 }
             };
 
@@ -63,6 +62,7 @@ namespace Graphics3D
             else
                 dP1P3 = 0;
 
+
             if (dP1P2 > dP1P3)
             {
                 for (var y = (int)p1.Y; y <= (int)p3.Y; y++)
@@ -71,12 +71,12 @@ namespace Graphics3D
                     if (y < p2.Y)
                     {
                         shadingModel.setOrder(1);
-                        shadingModel.ProcessScanLine(y, v1, v3, v1, v2, color, device);
+                        shadingModel.ProcessScanLine(y, v1, v3, v1, v2, color, lightModel, cameraPosition, device);
                     }
                     else
                     {
                         shadingModel.setOrder(2);
-                        shadingModel.ProcessScanLine(y, v1, v3, v2, v3, color, device);
+                        shadingModel.ProcessScanLine(y, v1, v3, v2, v3, color, lightModel, cameraPosition, device);
                     }
                 }
             }
@@ -88,12 +88,12 @@ namespace Graphics3D
                     if (y < p2.Y)
                     {
                         shadingModel.setOrder(3);
-                        shadingModel.ProcessScanLine(y, v1, v2, v1, v3, color, device);
+                        shadingModel.ProcessScanLine(y, v1, v2, v1, v3, color, lightModel, cameraPosition, device);
                     }
                     else
                     {
                         shadingModel.setOrder(4);
-                        shadingModel.ProcessScanLine(y, v2, v3, v1, v3, color, device);
+                        shadingModel.ProcessScanLine(y, v2, v3, v1, v3, color, lightModel, cameraPosition, device);
                     }
                 }
             }

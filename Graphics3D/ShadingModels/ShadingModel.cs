@@ -12,7 +12,7 @@ namespace Graphics3D.ShadingModels
     {
         void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights);
         void setOrder(int k);
-        void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device);
+        void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, ILightModel lightModel, Vector3D cameraPosition, Device device);
     }
 
     public struct FlatShadingModel : IShadingModel
@@ -21,10 +21,14 @@ namespace Graphics3D.ShadingModels
         Vector3D centerPoint;
         double[] ndotl;
         Light[] lights;
+
         public void setOrder(int k) { }
         public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
         {
             vnFace = (v1.Normal + v2.Normal + v3.Normal) / 3f;
+            vnFace.Normalize();
+
+
             centerPoint = (v1.WorldCoordinates + v2.WorldCoordinates + v3.WorldCoordinates) / 3f;
 
             this.lights = lights;
@@ -34,7 +38,7 @@ namespace Graphics3D.ShadingModels
                 ndotl[i] = Vector3D.ComputeNDotL(centerPoint, vnFace, lights[i].position);
             } 
         }
-        public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device)
+        public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, ILightModel lightModel, Vector3D cameraPosition, Device device)
         {
             Vector3D pa = va.Coordinates;
             Vector3D pb = vb.Coordinates;
@@ -55,22 +59,40 @@ namespace Graphics3D.ShadingModels
                 double gradient = (x - sx) / (double)(ex - sx);
 
                 double z = MathExtension.Interpolate(z1, z2, gradient);
-                z = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
 
                 double Ir = 0, Ig = 0, Ib = 0;
+                
                 for(int i=0;i<lights.Length;i++)
                 {
-                    Ir += ndotl[i];
-                    Ig += ndotl[i];
-                    Ib += ndotl[i];
+                    double Ior = (ndotl[i] * color.R) / 255f;
+                    double Iog = (ndotl[i] * color.G) / 255f;
+                    double Iob = (ndotl[i] * color.B) / 255f;
+
+                    double Ilr = lights[i].color.R / 255f;
+                    double Ilg = lights[i].color.G / 255f;
+                    double Ilb = lights[i].color.B / 255f;
+
+                    Vector3D l = lights[i].position - centerPoint;
+                    Vector3D n = vnFace;
+                    Vector3D v = cameraPosition - centerPoint;
+
+                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v);
+                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v);
+                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v);
                 }
 
+                Ir += lightModel.Ka;
+                Ig += lightModel.Ka;
+                Ib += lightModel.Ka;
+                
                 Ir = MathExtension.Clamp(Ir);
                 Ig = MathExtension.Clamp(Ig);
                 Ib = MathExtension.Clamp(Ib);
 
-                Color col = Color.FromArgb((int)(color.R * Ir), (int)(color.G * Ig), (int)(color.B * Ib));
-                device.PutPixel(x, y, z, col);
+                Color col = Color.FromArgb((int)(Ir * 255), (int)(Ig * 255), (int)(Ib * 255));
+
+                double zlog = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
+                device.PutPixel(x, y, zlog, col);
             }
         }
     }
@@ -78,6 +100,8 @@ namespace Graphics3D.ShadingModels
     public struct GouraudShadingModel : IShadingModel
     {
         double[] nl1, nl2, nl3;
+        Vector3D vnFace;
+        Vector3D centerPoint;
         public double[] ndotla;
         public double[] ndotlb;
         public double[] ndotlc;
@@ -121,7 +145,10 @@ namespace Graphics3D.ShadingModels
             nl2 = new double[lights.Length];
             nl3 = new double[lights.Length];
 
-            for(int i=0;i<lights.Length;i++)
+            vnFace = (v1.Normal + v2.Normal + v3.Normal) / 3f;
+            centerPoint = (v1.WorldCoordinates + v2.WorldCoordinates + v3.WorldCoordinates) / 3f;
+
+            for (int i=0;i<lights.Length;i++)
             {
                 nl1[i] = Vector3D.ComputeNDotL(v1.WorldCoordinates, v1.Normal, lights[i].position);
                 nl2[i] = Vector3D.ComputeNDotL(v2.WorldCoordinates, v2.Normal, lights[i].position);
@@ -129,7 +156,7 @@ namespace Graphics3D.ShadingModels
             }
         }
 
-        public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device)
+        public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, ILightModel lightModel, Vector3D cameraPosition, Device device)
         {
             Vector3D pa = va.Coordinates;
             Vector3D pb = vb.Coordinates;
@@ -159,24 +186,43 @@ namespace Graphics3D.ShadingModels
                 double gradient = (x - sx) / (double)(ex - sx);
 
                 double z = MathExtension.Interpolate(z1, z2, gradient);
-                z = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
+
+                
 
                 double Ir = 0, Ig = 0, Ib = 0;
                 for (int i = 0; i < lights.Length; i++)
                 {
                     double ndotl = MathExtension.Interpolate(snl[i], enl[i], gradient);
-                    Ir += ndotl;
-                    Ig += ndotl;
-                    Ib += ndotl;
+
+                    double Ior = (ndotl * color.R) / 255f;
+                    double Iog = (ndotl * color.G) / 255f;
+                    double Iob = (ndotl * color.B) / 255f;
+
+                    double Ilr = lights[i].color.R / 255f;
+                    double Ilg = lights[i].color.G / 255f;
+                    double Ilb = lights[i].color.B / 255f;
+
+                    Vector3D l = lights[i].position - centerPoint;
+                    Vector3D n = vnFace;
+                    Vector3D v = cameraPosition - centerPoint;
+
+                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v);
+                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v);
+                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v);
                 }
+
+                Ir += lightModel.Ka;
+                Ig += lightModel.Ka;
+                Ib += lightModel.Ka;
 
                 Ir = MathExtension.Clamp(Ir);
                 Ig = MathExtension.Clamp(Ig);
                 Ib = MathExtension.Clamp(Ib);
-                
-                
-                Color col = Color.FromArgb((int)(color.R * Ir), (int)(color.G * Ig), (int)(color.B * Ib));
-                device.PutPixel(x, y, z, col);
+
+                Color col = Color.FromArgb((int)(Ir * 255), (int)(Ig * 255), (int)(Ib * 255));
+
+                double zlog = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
+                device.PutPixel(x, y, zlog, col);
             }
         }
     }
@@ -189,7 +235,7 @@ namespace Graphics3D.ShadingModels
             this.lights = lights;
         }
 
-        public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, Device device)
+        public void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, ILightModel lightModel, Vector3D cameraPosition, Device device)
         {
             Vector3D pa = va.Coordinates;
             Vector3D pb = vb.Coordinates;
@@ -225,16 +271,33 @@ namespace Graphics3D.ShadingModels
                 for (int i=0;i<lights.Length;i++)
                 {
                     double ndotl = Vector3D.ComputeNDotL(worldCoord, normal, lights[i].position);
-                    Ir += ndotl;
-                    Ig += ndotl;
-                    Ib += ndotl;
+
+                    double Ior = (ndotl * color.R) / 255f;
+                    double Iog = (ndotl * color.G) / 255f;
+                    double Iob = (ndotl * color.B) / 255f;
+
+                    double Ilr = lights[i].color.R / 255f;
+                    double Ilg = lights[i].color.G / 255f;
+                    double Ilb = lights[i].color.B / 255f;
+
+                    Vector3D l = lights[i].position - worldCoord;
+                    Vector3D n = normal;
+                    Vector3D v = cameraPosition - worldCoord;
+
+                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v);
+                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v);
+                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v);
                 }
+
+                Ir += lightModel.Ka;
+                Ig += lightModel.Ka;
+                Ib += lightModel.Ka;
 
                 Ir = MathExtension.Clamp(Ir);
                 Ig = MathExtension.Clamp(Ig);
                 Ib = MathExtension.Clamp(Ib);
 
-                Color col = Color.FromArgb((int)(color.R * Ir), (int)(color.G * Ig), (int)(color.B * Ib));
+                Color col = Color.FromArgb((int)(Ir*255), (int)(Ig * 255), (int)(Ib * 255));
                 device.PutPixel(x, y, z, col);
             }
         }

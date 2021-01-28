@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,6 +56,13 @@ namespace Graphics3D
             Z/= len;
         }
 
+        public Vector3D Multiply(Matrix<double> matrix)
+        {
+            Vector<double> v = Vector<double>.Build.DenseOfArray(new double[] { X, Y, Z, 1 });
+            Vector<double> result = v * matrix;
+            result = result.Divide(result[result.Count - 1]);
+            return new Vector3D(result[0], result[1], result[2]);
+        }
         public Vector3D Normalized()
         {
             double len = Length();

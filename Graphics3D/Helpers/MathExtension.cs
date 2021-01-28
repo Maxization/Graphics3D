@@ -20,11 +20,12 @@ namespace Graphics3D
             return crossResult;
         }
 
-        public static Vector<double> Multiply(this Matrix<double> m1, Vector3D v)
+        public static Vector3D Multiply(this Matrix<double> m1, Vector3D v)
         {
             Vector<double> vector = Vector<double>.Build.DenseOfArray(new double[] { v.Z, v.X, v.Y, 1 });
             Vector<double> res = m1 * vector;
-            return res.Divide(res[res.Count - 1]);
+            res = res.Divide(res[res.Count - 1]);
+            return new Vector3D(res[0], res[1], res[2]);
         }
 
         public static Vector3D InterpolateVector(Vector3D min, Vector3D max, double gradient)
