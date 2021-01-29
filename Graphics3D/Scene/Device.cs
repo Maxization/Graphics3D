@@ -90,14 +90,6 @@ namespace Graphics3D
         public void Render(Camera camera, ShadingModelEnum shadingType, ILightModel lightModel, params Mesh[] meshes)
         {
             var viewMatrix = MatrixGenerator.LookAt(camera.Position, camera.Target, new Vector3D(0, 1, 0));
-            //for(int i=0;i<viewMatrix.RowCount;i++)
-            //{
-            //    for(int j=0;j<viewMatrix.ColumnCount;j++)
-            //    {
-            //        Console.Write($"{viewMatrix[i, j]} ");
-            //    }
-            //    Console.WriteLine();
-            //}
 
             var projectMatrix = MatrixGenerator.PerspectiveFov(1.74f, (double)RenderHeight / RenderWidth, 1f, 100f);
 
@@ -109,25 +101,16 @@ namespace Graphics3D
                 Matrix<double> worldViewMatrix = viewMatrix * worldMatrix;
                 Matrix<double> transformMatrix = projectMatrix * worldViewMatrix;
 
-                //for (int i = 0; i < worldViewMatrix.RowCount; i++)
-                //{
-                //    for (int j = 0; j < worldViewMatrix.ColumnCount; j++)
-                //    {
-                //        Console.Write($"{projectMatrix[i, j]} ");
-                //    }
-                //    Console.WriteLine();
-                //}
-
-
                 //Parallel.ForEach(mesh.Faces, (Face face) =>
                 foreach (Face face in mesh.Faces)
                 {
                     Matrix<double> worldToObject = worldViewMatrix.Inverse();
-                    Vector3D cameraPosition3 = worldToObject.Multiply(camera.Position);
-                    Vector3D T = face.Position - cameraPosition3;
+                    Vector3D cameraPosition = worldToObject.Multiply(camera.Position);
+                    Vector3D T = face.Position - cameraPosition;
                     double dot = Vector3D.Dot(T, face.Normal);
                     if (dot >= 0)
                     {
+                        //return;
                         continue;
                     }
 

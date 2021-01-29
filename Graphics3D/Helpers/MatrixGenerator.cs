@@ -12,10 +12,6 @@ namespace Graphics3D
     {
         public static Matrix<double> LookAt(Vector3D cameraPosition, Vector3D cameraTarget, Vector3D up3D)
         {
-            //Vector<double> cameraPos = Vector<double>.Build.DenseOfArray(new double[] { cameraPosition.Z, cameraPosition.X, cameraPosition.Y });
-            //Vector<double> cameraTar = Vector<double>.Build.DenseOfArray(new double[] { cameraTarget.Z, cameraTarget.X, cameraTarget.Y });
-            //Vector<double> up = Vector<double>.Build.DenseOfArray(new double[] { up3D.Z, up3D.X, up3D.Y });
-
             Vector3D zAxis = (cameraTarget - cameraPosition).Normalized();
             Vector3D xAxis = Vector3D.Cross(zAxis, up3D).Normalized();
             Vector3D yAxis = Vector3D.Cross(xAxis, zAxis);
@@ -76,9 +72,9 @@ namespace Graphics3D
         public static Matrix<double> Translation(Vector3D p)
         {
             Matrix<double> translationMatrix = Matrix<double>.Build.DenseIdentity(4);
-            translationMatrix[0, 3] = p.Z;
-            translationMatrix[1, 3] = p.X;
-            translationMatrix[2, 3] = p.Y;
+            translationMatrix[0, 3] = p.X;
+            translationMatrix[1, 3] = p.Y;
+            translationMatrix[2, 3] = p.Z;
 
             return translationMatrix;
 
