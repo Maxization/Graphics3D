@@ -59,7 +59,7 @@ namespace Graphics3D
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y + 0.05f, meshes[0].Rotation.Z);
+            meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X + 0.05f, meshes[0].Rotation.Y + 0.05f, meshes[0].Rotation.Z);
             UpdateScreen();
         }
 

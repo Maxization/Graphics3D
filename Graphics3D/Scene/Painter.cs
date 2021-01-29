@@ -45,7 +45,7 @@ namespace Graphics3D
                 {
                     position = new Vector3D(0,10,10),
                     color = Color.Red
-                }
+                },
             };
 
             shadingModel.CalculateConst(v1, v2, v3, lights);

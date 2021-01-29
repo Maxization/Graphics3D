@@ -187,8 +187,6 @@ namespace Graphics3D.ShadingModels
 
                 double z = MathExtension.Interpolate(z1, z2, gradient);
 
-                
-
                 double Ir = 0, Ig = 0, Ib = 0;
                 for (int i = 0; i < lights.Length; i++)
                 {

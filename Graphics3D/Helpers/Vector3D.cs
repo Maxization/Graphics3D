@@ -22,7 +22,10 @@ namespace Graphics3D
         {
             return new Vector3D(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
         }
-
+        public static Vector3D operator -(Vector3D v)
+        {
+            return new Vector3D(-v.X, -v.Y, -v.Z);
+        }
         public static Vector3D operator -(Vector3D v1, Vector3D v2)
         {
             return new Vector3D(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
@@ -31,6 +34,16 @@ namespace Graphics3D
         public static Vector3D operator/(Vector3D v, float s)
         {
             return new Vector3D(v.X / s, v.Y / s, v.Z / s);
+        }
+
+        public static Vector3D Cross(Vector3D v1, Vector3D v2)
+        {
+            Vector3D crossResult = new Vector3D();
+            crossResult.X = v1.Y * v2.Z - v1.Z * v2.Y;
+            crossResult.Y = -v1.X * v2.Z + v1.Z * v2.X;
+            crossResult.Z = v1.X * v2.Y - v1.Y * v2.X;
+
+            return crossResult;
         }
 
         public static Vector3D operator*(double s, Vector3D v)

@@ -22,7 +22,7 @@ namespace Graphics3D
 
         public static Vector3D Multiply(this Matrix<double> m1, Vector3D v)
         {
-            Vector<double> vector = Vector<double>.Build.DenseOfArray(new double[] { v.Z, v.X, v.Y, 1 });
+            Vector<double> vector = Vector<double>.Build.DenseOfArray(new double[] { v.X, v.Y, v.Z, 1 });
             Vector<double> res = m1 * vector;
             res = res.Divide(res[res.Count - 1]);
             return new Vector3D(res[0], res[1], res[2]);

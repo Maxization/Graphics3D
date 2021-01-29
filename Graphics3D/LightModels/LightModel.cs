@@ -89,6 +89,5 @@ namespace Graphics3D.LightModels
 
             return MathExtension.Clamp(Id + Is);
         }
-
     }
 }

@@ -12,35 +12,37 @@ namespace Graphics3D
     {
         public static Matrix<double> LookAt(Vector3D cameraPosition, Vector3D cameraTarget, Vector3D up3D)
         {
-            Vector<double> cameraPos = Vector<double>.Build.DenseOfArray(new double[] { cameraPosition.Z, cameraPosition.X, cameraPosition.Y });
-            Vector<double> cameraTar = Vector<double>.Build.DenseOfArray(new double[] { cameraTarget.Z, cameraTarget.X, cameraTarget.Y });
-            Vector<double> up = Vector<double>.Build.DenseOfArray(new double[] { up3D.Z, up3D.X, up3D.Y });
+            //Vector<double> cameraPos = Vector<double>.Build.DenseOfArray(new double[] { cameraPosition.Z, cameraPosition.X, cameraPosition.Y });
+            //Vector<double> cameraTar = Vector<double>.Build.DenseOfArray(new double[] { cameraTarget.Z, cameraTarget.X, cameraTarget.Y });
+            //Vector<double> up = Vector<double>.Build.DenseOfArray(new double[] { up3D.Z, up3D.X, up3D.Y });
 
-            Vector<double> zAxis = (cameraPos - cameraTar).Normalize(1);
-            Vector<double> xAxis = up.Cross3D(zAxis).Normalize(1);
-            Vector<double> yAxis = zAxis.Cross3D(xAxis);
+            Vector3D zAxis = (cameraTarget - cameraPosition).Normalized();
+            Vector3D xAxis = Vector3D.Cross(zAxis, up3D).Normalized();
+            Vector3D yAxis = Vector3D.Cross(xAxis, zAxis);
+
+            zAxis = -zAxis;
 
             Matrix<double> viewMatrix = Matrix<double>.Build.DenseOfArray(new double[,]
             {
-                {xAxis[0], yAxis[0], zAxis[0], 0 },
-                {xAxis[1], yAxis[1], zAxis[1], 0 },
-                {xAxis[2], yAxis[2], zAxis[2], 0 },
-                {-xAxis.DotProduct(cameraPos), -yAxis.DotProduct(cameraPos), -zAxis.DotProduct(cameraPos), 1 }
+                {xAxis.X, xAxis.Y, xAxis.Z, -Vector3D.Dot(xAxis,cameraPosition) },
+                {yAxis.X, yAxis.Y, yAxis.Z, -Vector3D.Dot(yAxis,cameraPosition) },
+                {zAxis.X, zAxis.Y, zAxis.Z, -Vector3D.Dot(zAxis,cameraPosition) },
+                {0, 0, 0, 1 }
             });
-
-            return viewMatrix.Transpose();
+            return viewMatrix;
         }
         public static Matrix<double> PerspectiveFov(double fov, double aspect, double znear, double zfar)
         {
-            double yScale = (double)(1.0f / Math.Tan(fov * 0.5f));
-            double q1 = -(zfar + znear) / (zfar - znear);
-            double q2 = -2 * zfar * znear / (zfar - znear);
+            double h = (double)(1.0f / Math.Tan(fov * 0.5f));
+            double w = h * aspect;
+            double q1 = zfar / (znear - zfar);
+            double q2 =  zfar * znear / (znear - zfar);
             Matrix<double> projectMatrix = Matrix<double>.Build.DenseOfArray(new double[,]
             {
-                { yScale, 0, 0, 0 },
-                {0, yScale/aspect, 0, 0 },
-                {0, 0, q1, q2},
-                {0, 0, -1, 0 }
+                { w, 0, 0, 0 },
+                {0, h, 0, 0 },
+                {0, 0, q1, -1},
+                {0, 0, q2, 0 }
             });
             return projectMatrix;
         }

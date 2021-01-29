@@ -103,8 +103,8 @@ namespace Graphics3D
 
             foreach (Mesh mesh in meshes)
             {
-                Matrix<double> worldMatrix = MatrixGenerator.Translation(mesh.Position) *
-                                             MatrixGenerator.RotationYawPitchRoll(mesh.Rotation.X, mesh.Rotation.Z, mesh.Rotation.Y);
+                Matrix<double> worldMatrix = MatrixGenerator.Translation(mesh.Position)
+                                             * MatrixGenerator.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z);
 
                 Matrix<double> worldViewMatrix = viewMatrix * worldMatrix;
                 Matrix<double> transformMatrix = projectMatrix * worldViewMatrix;
@@ -122,7 +122,14 @@ namespace Graphics3D
                 //Parallel.ForEach(mesh.Faces, (Face face) =>
                 foreach (Face face in mesh.Faces)
                 {
-
+                    Matrix<double> worldToObject = worldViewMatrix.Inverse();
+                    Vector3D cameraPosition3 = worldToObject.Multiply(camera.Position);
+                    Vector3D T = face.Position - cameraPosition3;
+                    double dot = Vector3D.Dot(T, face.Normal);
+                    if (dot >= 0)
+                    {
+                        continue;
+                    }
 
                     Vertex v1 = mesh.Vertices[face.A];
                     Vertex v2 = mesh.Vertices[face.B];
@@ -134,7 +141,7 @@ namespace Graphics3D
                     v3 = Project(v3, transformMatrix, worldMatrix);
 
                     IShadingModel sm = ShadingModelFactory.Create(shadingType);
-                    Painter.FillTriangle(v1, v2, v3, Color.White, sm, lightModel,camera.Position, this);
+                    Painter.FillTriangle(v1, v2, v3, Color.Gray, sm, lightModel,camera.Position, this);
 
                 }//);
             }
@@ -223,6 +230,7 @@ namespace Graphics3D
 
                     mesh.Faces[index] = new Face { A = aa, B = bb, C = cc };
                     mesh.Faces[index].Normal = (na + nb + nc) / 3.0f;
+                    mesh.Faces[index].Position = (mesh.Vertices[aa].Coordinates + mesh.Vertices[bb].Coordinates + mesh.Vertices[cc].Coordinates) / 3f;
                 }
 
                 var position = jsonObject.meshes[meshIndex].position;
