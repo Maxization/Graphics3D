@@ -19,6 +19,9 @@ namespace Graphics3D
         Device device;
         Mesh[] meshes;
         Camera camera;
+        Camera staticCamera;
+        Camera followCamera;
+        Camera dynamicCamera;
         DateTime previousDate;
         ShadingModelEnum shadingType;
         ILightModel lightModel;
@@ -27,17 +30,36 @@ namespace Graphics3D
             InitializeComponent();
             bmp = new DirectBitmap(pictureBox1.Width, pictureBox1.Height);
             pictureBox1.Image = bmp.Bitmap;
-            camera = new Camera();
             device = new Device(bmp);
-            meshes = device.LoadJSONFile("cube.babylon");
-
-            camera.Position = new Vector3D(0, 0, 3);
-            camera.Target = new Vector3D(0, 0, 0);
+            meshes = device.LoadJSONFile("scene.babylon");
 
             shadingType = ShadingModelEnum.Flat;
-            lightModel = new PhongLightModel(0.5, 0.5, 0.2, 20);
+            lightModel = new PhongLightModel(0.1, 0.5, 0.5, 20);
 
             meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y + 0.00001f, meshes[0].Rotation.Z);
+            meshes[2].Rotation = new Vector3D(meshes[2].Rotation.X + Math.PI / 2, meshes[2].Rotation.Y, meshes[2].Rotation.Z);
+            meshes[3].Rotation = new Vector3D(meshes[3].Rotation.X + Math.PI / 2, meshes[3].Rotation.Y, meshes[3].Rotation.Z);
+            meshes[4].Rotation = new Vector3D(meshes[4].Rotation.X + Math.PI / 2, meshes[4].Rotation.Y, meshes[4].Rotation.Z);
+
+            meshes[0].Color = Color.Green;
+            meshes[1].Color = Color.Red;
+            meshes[2].Color = Color.Blue;
+            meshes[3].Color = Color.Blue;
+            meshes[4].Color = Color.Blue;
+
+            staticCamera = new Camera();
+            staticCamera.Position = new Vector3D(0, 3, 5);
+            staticCamera.Target = new Vector3D(0, 0, 0);
+
+            followCamera = new Camera();
+            followCamera.Position = new Vector3D(0, 3, 8);
+            followCamera.Target = meshes[1].Position;
+
+            dynamicCamera = new Camera();
+            dynamicCamera.Position = new Vector3D(meshes[1].Position.X, 10, meshes[1].Position.Z);
+            dynamicCamera.Target = new Vector3D(10, meshes[1].Position.Y + 2, 0);
+
+            camera = staticCamera;
             UpdateScreen();
         }
         
@@ -54,12 +76,26 @@ namespace Graphics3D
             device.Render(camera, shadingType, lightModel, meshes);
 
             pictureBox1.Invalidate();
-
         }
 
+
+        double pos_dx = 0.1f;
+        double rot_dz = 0.05f;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X + 0.05f, meshes[0].Rotation.Y + 0.05f, meshes[0].Rotation.Z);
+            
+            double oldX = meshes[1].Position.X;
+            if (oldX > 6 || oldX < -6)
+            {
+                pos_dx = -pos_dx;
+                rot_dz = -rot_dz;
+            }
+
+            meshes[1].Position = new Vector3D(oldX + pos_dx, 0.5, 0);
+            meshes[1].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y, meshes[0].Rotation.Z + rot_dz);
+            followCamera.Target = meshes[1].Position;
+            dynamicCamera.Position = new Vector3D(meshes[1].Position.X, meshes[1].Position.Y + 2, meshes[1].Position.Z);
+
             UpdateScreen();
         }
 

@@ -44,7 +44,7 @@ namespace Graphics3D
                 new Light
                 {
                     position = new Vector3D(0,10,10),
-                    color = Color.Red
+                    color = Color.White
                 },
             };
 

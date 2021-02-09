@@ -2,6 +2,7 @@
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,8 @@ namespace Graphics3D
         public Face[] Faces { get; set; }
         public Vector3D Position { get; set; }
         public Vector3D Rotation { get; set; }
+
+        public Color Color { get; set; }
 
         public Mesh(string name, int verticesCount, int faceCount)
         {
