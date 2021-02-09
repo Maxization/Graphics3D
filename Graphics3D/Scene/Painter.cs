@@ -43,9 +43,14 @@ namespace Graphics3D
             {
                 new Light
                 {
-                    position = new Vector3D(0,10,10),
+                    position = new Vector3D(10,15,5),
                     color = Color.White
                 },
+                new Light
+                {
+                    position = new Vector3D(-10,15,5),
+                    color = Color.White
+                }
             };
 
             shadingModel.CalculateConst(v1, v2, v3, lights);

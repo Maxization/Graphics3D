@@ -33,24 +33,24 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.trackBarPosZ = new System.Windows.Forms.TrackBar();
-            this.trackBarPosY = new System.Windows.Forms.TrackBar();
-            this.trackBarPosX = new System.Windows.Forms.TrackBar();
             this.shadingGroupBox = new System.Windows.Forms.GroupBox();
             this.radioButtonPhong = new System.Windows.Forms.RadioButton();
             this.radioButtonGouraud = new System.Windows.Forms.RadioButton();
             this.radioButtonFlat = new System.Windows.Forms.RadioButton();
+            this.groupBoxCamera = new System.Windows.Forms.GroupBox();
+            this.radioButtonStatic = new System.Windows.Forms.RadioButton();
+            this.radioButtonFollow = new System.Windows.Forms.RadioButton();
+            this.radioButtonDynamic = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).BeginInit();
             this.shadingGroupBox.SuspendLayout();
+            this.groupBoxCamera.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
             // 
+            this.timer1.Enabled = true;
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
@@ -83,55 +83,23 @@
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.trackBarPosZ, 0, 5);
-            this.tableLayoutPanel2.Controls.Add(this.trackBarPosY, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.trackBarPosX, 0, 3);
             this.tableLayoutPanel2.Controls.Add(this.shadingGroupBox, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.groupBoxCamera, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(955, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 6;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 84F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 77F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 93F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 119F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 64F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 72F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 111F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 264F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 146F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(226, 755);
             this.tableLayoutPanel2.TabIndex = 2;
-            // 
-            // trackBarPosZ
-            // 
-            this.trackBarPosZ.Location = new System.Drawing.Point(3, 428);
-            this.trackBarPosZ.Maximum = 50;
-            this.trackBarPosZ.Minimum = -50;
-            this.trackBarPosZ.Name = "trackBarPosZ";
-            this.trackBarPosZ.Size = new System.Drawing.Size(218, 45);
-            this.trackBarPosZ.TabIndex = 8;
-            this.trackBarPosZ.Scroll += new System.EventHandler(this.trackBarPosZ_Scroll);
-            // 
-            // trackBarPosY
-            // 
-            this.trackBarPosY.Location = new System.Drawing.Point(3, 335);
-            this.trackBarPosY.Maximum = 50;
-            this.trackBarPosY.Minimum = -50;
-            this.trackBarPosY.Name = "trackBarPosY";
-            this.trackBarPosY.Size = new System.Drawing.Size(218, 45);
-            this.trackBarPosY.TabIndex = 7;
-            this.trackBarPosY.Scroll += new System.EventHandler(this.trackBarPosY_Scroll);
-            // 
-            // trackBarPosX
-            // 
-            this.trackBarPosX.Location = new System.Drawing.Point(3, 258);
-            this.trackBarPosX.Maximum = 50;
-            this.trackBarPosX.Minimum = -50;
-            this.trackBarPosX.Name = "trackBarPosX";
-            this.trackBarPosX.Size = new System.Drawing.Size(218, 45);
-            this.trackBarPosX.TabIndex = 6;
-            this.trackBarPosX.Scroll += new System.EventHandler(this.trackBarPosX_Scroll);
             // 
             // shadingGroupBox
             // 
@@ -183,6 +151,54 @@
             this.radioButtonFlat.UseVisualStyleBackColor = true;
             this.radioButtonFlat.CheckedChanged += new System.EventHandler(this.radioButtonFlat_CheckedChanged);
             // 
+            // groupBoxCamera
+            // 
+            this.groupBoxCamera.Controls.Add(this.radioButtonDynamic);
+            this.groupBoxCamera.Controls.Add(this.radioButtonFollow);
+            this.groupBoxCamera.Controls.Add(this.radioButtonStatic);
+            this.groupBoxCamera.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxCamera.Location = new System.Drawing.Point(3, 128);
+            this.groupBoxCamera.Name = "groupBoxCamera";
+            this.groupBoxCamera.Size = new System.Drawing.Size(220, 113);
+            this.groupBoxCamera.TabIndex = 10;
+            this.groupBoxCamera.TabStop = false;
+            this.groupBoxCamera.Text = "Camera";
+            // 
+            // radioButtonStatic
+            // 
+            this.radioButtonStatic.AutoSize = true;
+            this.radioButtonStatic.Checked = true;
+            this.radioButtonStatic.Location = new System.Drawing.Point(7, 20);
+            this.radioButtonStatic.Name = "radioButtonStatic";
+            this.radioButtonStatic.Size = new System.Drawing.Size(52, 17);
+            this.radioButtonStatic.TabIndex = 0;
+            this.radioButtonStatic.TabStop = true;
+            this.radioButtonStatic.Text = "Static";
+            this.radioButtonStatic.UseVisualStyleBackColor = true;
+            this.radioButtonStatic.CheckedChanged += new System.EventHandler(this.radioButtonStatic_CheckedChanged);
+            // 
+            // radioButtonFollow
+            // 
+            this.radioButtonFollow.AutoSize = true;
+            this.radioButtonFollow.Location = new System.Drawing.Point(7, 43);
+            this.radioButtonFollow.Name = "radioButtonFollow";
+            this.radioButtonFollow.Size = new System.Drawing.Size(55, 17);
+            this.radioButtonFollow.TabIndex = 1;
+            this.radioButtonFollow.Text = "Follow";
+            this.radioButtonFollow.UseVisualStyleBackColor = true;
+            this.radioButtonFollow.CheckedChanged += new System.EventHandler(this.radioButtonFollow_CheckedChanged);
+            // 
+            // radioButtonDynamic
+            // 
+            this.radioButtonDynamic.AutoSize = true;
+            this.radioButtonDynamic.Location = new System.Drawing.Point(7, 66);
+            this.radioButtonDynamic.Name = "radioButtonDynamic";
+            this.radioButtonDynamic.Size = new System.Drawing.Size(66, 17);
+            this.radioButtonDynamic.TabIndex = 2;
+            this.radioButtonDynamic.Text = "Dynamic";
+            this.radioButtonDynamic.UseVisualStyleBackColor = true;
+            this.radioButtonDynamic.CheckedChanged += new System.EventHandler(this.radioButtonDynamic_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -194,12 +210,10 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarPosX)).EndInit();
             this.shadingGroupBox.ResumeLayout(false);
             this.shadingGroupBox.PerformLayout();
+            this.groupBoxCamera.ResumeLayout(false);
+            this.groupBoxCamera.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -209,13 +223,14 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TrackBar trackBarPosZ;
-        private System.Windows.Forms.TrackBar trackBarPosY;
-        private System.Windows.Forms.TrackBar trackBarPosX;
         private System.Windows.Forms.GroupBox shadingGroupBox;
         private System.Windows.Forms.RadioButton radioButtonPhong;
         private System.Windows.Forms.RadioButton radioButtonGouraud;
         private System.Windows.Forms.RadioButton radioButtonFlat;
+        private System.Windows.Forms.GroupBox groupBoxCamera;
+        private System.Windows.Forms.RadioButton radioButtonDynamic;
+        private System.Windows.Forms.RadioButton radioButtonFollow;
+        private System.Windows.Forms.RadioButton radioButtonStatic;
     }
 }
 

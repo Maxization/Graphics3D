@@ -56,8 +56,8 @@ namespace Graphics3D
             followCamera.Target = meshes[1].Position;
 
             dynamicCamera = new Camera();
-            dynamicCamera.Position = new Vector3D(meshes[1].Position.X, 10, meshes[1].Position.Z);
-            dynamicCamera.Target = new Vector3D(10, meshes[1].Position.Y + 2, 0);
+            dynamicCamera.Position = new Vector3D(meshes[1].Position.X - 10, 15, meshes[1].Position.Z);
+            dynamicCamera.Target = new Vector3D(5, 10, 0);
 
             camera = staticCamera;
             UpdateScreen();
@@ -94,7 +94,7 @@ namespace Graphics3D
             meshes[1].Position = new Vector3D(oldX + pos_dx, 0.5, 0);
             meshes[1].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y, meshes[0].Rotation.Z + rot_dz);
             followCamera.Target = meshes[1].Position;
-            dynamicCamera.Position = new Vector3D(meshes[1].Position.X, meshes[1].Position.Y + 2, meshes[1].Position.Z);
+            dynamicCamera.Position = new Vector3D(meshes[1].Position.X - 10, 15, meshes[1].Position.Z);
 
             UpdateScreen();
         }
@@ -144,6 +144,33 @@ namespace Graphics3D
             if (button.Checked)
             {
                 shadingType = ShadingModelEnum.Phong;
+            }
+        }
+
+        private void radioButtonStatic_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton button = sender as RadioButton;
+            if (button.Checked)
+            {
+                camera = staticCamera;
+            }
+        }
+
+        private void radioButtonFollow_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton button = sender as RadioButton;
+            if (button.Checked)
+            {
+                camera = followCamera;
+            }
+        }
+
+        private void radioButtonDynamic_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton button = sender as RadioButton;
+            if (button.Checked)
+            {
+                camera = dynamicCamera;
             }
         }
     }

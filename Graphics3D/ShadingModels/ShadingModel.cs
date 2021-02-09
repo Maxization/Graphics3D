@@ -10,6 +10,7 @@ namespace Graphics3D.ShadingModels
 {
     public interface IShadingModel
     {
+        bool Fog { get; set; }
         void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights);
         void setOrder(int k);
         void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, ILightModel lightModel, Vector3D cameraPosition, Device device);
@@ -21,6 +22,8 @@ namespace Graphics3D.ShadingModels
         Vector3D centerPoint;
         double[] ndotl;
         Light[] lights;
+
+        public bool Fog { get; set; }
 
         public void setOrder(int k) { }
         public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
@@ -107,6 +110,8 @@ namespace Graphics3D.ShadingModels
         public double[] ndotlc;
         public double[] ndotld;
         Light[] lights;
+
+        public bool Fog { get; set; }
 
         public void setOrder(int k)
         {
@@ -228,6 +233,8 @@ namespace Graphics3D.ShadingModels
     public struct PhongShadingModel : IShadingModel
     {
         Light[] lights;
+
+        public bool Fog { get; set; }
         public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
         {
             this.lights = lights;

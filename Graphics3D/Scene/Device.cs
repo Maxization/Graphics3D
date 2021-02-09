@@ -101,8 +101,8 @@ namespace Graphics3D
                 Matrix<double> worldViewMatrix = viewMatrix * worldMatrix;
                 Matrix<double> transformMatrix = projectMatrix * worldViewMatrix;
 
-                Parallel.ForEach(mesh.Faces, (Face face) =>
-                //foreach (Face face in mesh.Faces)
+                //Parallel.ForEach(mesh.Faces, (Face face) =>
+                foreach (Face face in mesh.Faces)
                 {
                     Matrix<double> worldToObject = worldViewMatrix.Inverse();
                     Vector3D cameraPosition = worldToObject.Multiply(camera.Position);
@@ -110,8 +110,8 @@ namespace Graphics3D
                     double dot = Vector3D.Dot(T, face.Normal);
                     if (dot >= 0)
                     {
-                        return;
-                        //continue;
+                        //return;
+                        continue;
                     }
 
                     Vertex v1 = mesh.Vertices[face.A];
@@ -126,7 +126,7 @@ namespace Graphics3D
                     IShadingModel sm = ShadingModelFactory.Create(shadingType);
                     Painter.FillTriangle(v1, v2, v3, mesh.Color, sm, lightModel,camera.Position, this);
 
-                });
+                }//);
             }
         }
 
