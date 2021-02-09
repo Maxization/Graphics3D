@@ -1,4 +1,5 @@
 ﻿using Graphics3D.LightModels;
+using Graphics3D.Scene;
 using Graphics3D.ShadingModels;
 using MathNet.Numerics.LinearAlgebra;
 using System;
@@ -23,6 +24,7 @@ namespace Graphics3D
         Camera followCamera;
         Camera dynamicCamera;
         DateTime previousDate;
+        Fog fog;
         ShadingModelEnum shadingType;
         ILightModel lightModel;
         public Form1()
@@ -32,6 +34,7 @@ namespace Graphics3D
             pictureBox1.Image = bmp.Bitmap;
             device = new Device(bmp);
             meshes = device.LoadJSONFile("scene.babylon");
+            fog = new Fog(false, 500);
 
             shadingType = ShadingModelEnum.Flat;
             lightModel = new PhongLightModel(0.1, 0.5, 0.5, 20);
@@ -73,7 +76,7 @@ namespace Graphics3D
 
             device.Clear();
 
-            device.Render(camera, shadingType, lightModel, meshes);
+            device.Render(camera, shadingType, lightModel, fog, meshes);
 
             pictureBox1.Invalidate();
         }
@@ -83,7 +86,11 @@ namespace Graphics3D
         double rot_dz = 0.05f;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            
+            if(fog.isFog)
+            {
+                fog.ChangeFog();
+            }
+
             double oldX = meshes[1].Position.X;
             if (oldX > 6 || oldX < -6)
             {
@@ -98,28 +105,6 @@ namespace Graphics3D
 
             UpdateScreen();
         }
-
-        private void trackBarPosX_Scroll(object sender, EventArgs e)
-        {
-            TrackBar trackBar = sender as TrackBar;
-            meshes[0].Position = new Vector3D(trackBar.Value / 100f, meshes[0].Position.Y, meshes[0].Position.Z);
-            UpdateScreen();
-        }
-
-        private void trackBarPosY_Scroll(object sender, EventArgs e)
-        {
-            TrackBar trackBar = sender as TrackBar;
-            meshes[0].Position = new Vector3D(meshes[0].Position.X, trackBar.Value / 100f, meshes[0].Position.Z);
-            UpdateScreen();
-        }
-
-        private void trackBarPosZ_Scroll(object sender, EventArgs e)
-        {
-            TrackBar trackBar = sender as TrackBar;
-            meshes[0].Position = new Vector3D(meshes[0].Position.X, meshes[0].Position.Y, trackBar.Value / 100f);
-            UpdateScreen();
-        }
-
         private void radioButtonFlat_CheckedChanged(object sender, EventArgs e)
         {
             RadioButton button = sender as RadioButton;
@@ -172,6 +157,12 @@ namespace Graphics3D
             {
                 camera = dynamicCamera;
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox button = sender as CheckBox;
+            fog.ChangeState(button.Checked);
         }
     }
 }

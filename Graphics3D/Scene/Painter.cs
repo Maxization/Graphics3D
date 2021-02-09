@@ -1,4 +1,5 @@
 ﻿using Graphics3D.LightModels;
+using Graphics3D.Scene;
 using Graphics3D.ShadingModels;
 using MathNet.Numerics.LinearAlgebra;
 using System;

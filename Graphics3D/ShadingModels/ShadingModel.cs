@@ -1,4 +1,5 @@
 ﻿using Graphics3D.LightModels;
+using Graphics3D.Scene;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,7 +11,7 @@ namespace Graphics3D.ShadingModels
 {
     public interface IShadingModel
     {
-        bool Fog { get; set; }
+        Fog Fog { get; set; }
         void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights);
         void setOrder(int k);
         void ProcessScanLine(int y, Vertex va, Vertex vb, Vertex vc, Vertex vd, Color color, ILightModel lightModel, Vector3D cameraPosition, Device device);
@@ -18,13 +19,14 @@ namespace Graphics3D.ShadingModels
 
     public struct FlatShadingModel : IShadingModel
     {
+        
         Vector3D vnFace;
         Vector3D centerPoint;
         double[] ndotl;
         Light[] lights;
+        public Vector3D cameraPositioninView;
 
-        public bool Fog { get; set; }
-
+        public Fog Fog { get; set; }
         public void setOrder(int k) { }
         public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
         {
@@ -92,7 +94,11 @@ namespace Graphics3D.ShadingModels
                 Ig = MathExtension.Clamp(Ig);
                 Ib = MathExtension.Clamp(Ib);
 
-                Color col = Color.FromArgb((int)(Ir * 255), (int)(Ig * 255), (int)(Ib * 255));
+                int R = (int)(Ir * 255);
+                int G = (int)(Ig * 255);
+                int B = (int)(Ib * 255);
+
+                Color col = Color.FromArgb(R, G, B);
 
                 double zlog = Math.Log(1 * z + 1) / Math.Log(1 * 100 + 1) * z;
                 device.PutPixel(x, y, zlog, col);
@@ -111,7 +117,7 @@ namespace Graphics3D.ShadingModels
         public double[] ndotld;
         Light[] lights;
 
-        public bool Fog { get; set; }
+        public Fog Fog { get; set; }
 
         public void setOrder(int k)
         {
@@ -233,8 +239,8 @@ namespace Graphics3D.ShadingModels
     public struct PhongShadingModel : IShadingModel
     {
         Light[] lights;
+        public Fog Fog { get; set; }
 
-        public bool Fog { get; set; }
         public void CalculateConst(Vertex v1, Vertex v2, Vertex v3, Light[] lights)
         {
             this.lights = lights;
@@ -302,7 +308,23 @@ namespace Graphics3D.ShadingModels
                 Ig = MathExtension.Clamp(Ig);
                 Ib = MathExtension.Clamp(Ib);
 
-                Color col = Color.FromArgb((int)(Ir*255), (int)(Ig * 255), (int)(Ib * 255));
+                
+
+                int R = (int)(Ir * 255);
+                int G = (int)(Ig * 255);
+                int B = (int)(Ib * 255);
+
+                if(Fog.isFog)
+                {
+                    double zDiff = Math.Abs(worldCoord.Z - cameraPosition.Z);
+                    zDiff /= Fog.FogValue;
+                    R = (int)MathExtension.Clamp(R + zDiff * 255, 0, 255);
+                    G = (int)MathExtension.Clamp(G + zDiff * 255, 0, 255);
+                    B = (int)MathExtension.Clamp(B + zDiff * 255, 0, 255);
+                }
+                
+
+                Color col = Color.FromArgb(R, G, B);
                 device.PutPixel(x, y, z, col);
             }
         }

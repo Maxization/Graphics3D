@@ -38,14 +38,17 @@
             this.radioButtonGouraud = new System.Windows.Forms.RadioButton();
             this.radioButtonFlat = new System.Windows.Forms.RadioButton();
             this.groupBoxCamera = new System.Windows.Forms.GroupBox();
-            this.radioButtonStatic = new System.Windows.Forms.RadioButton();
-            this.radioButtonFollow = new System.Windows.Forms.RadioButton();
             this.radioButtonDynamic = new System.Windows.Forms.RadioButton();
+            this.radioButtonFollow = new System.Windows.Forms.RadioButton();
+            this.radioButtonStatic = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             this.shadingGroupBox.SuspendLayout();
             this.groupBoxCamera.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
@@ -85,15 +88,16 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.shadingGroupBox, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBoxCamera, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 2);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(955, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 6;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 119F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 64F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 72F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 111F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 91F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 82F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 74F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 264F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 146F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -164,6 +168,28 @@
             this.groupBoxCamera.TabStop = false;
             this.groupBoxCamera.Text = "Camera";
             // 
+            // radioButtonDynamic
+            // 
+            this.radioButtonDynamic.AutoSize = true;
+            this.radioButtonDynamic.Location = new System.Drawing.Point(7, 66);
+            this.radioButtonDynamic.Name = "radioButtonDynamic";
+            this.radioButtonDynamic.Size = new System.Drawing.Size(66, 17);
+            this.radioButtonDynamic.TabIndex = 2;
+            this.radioButtonDynamic.Text = "Dynamic";
+            this.radioButtonDynamic.UseVisualStyleBackColor = true;
+            this.radioButtonDynamic.CheckedChanged += new System.EventHandler(this.radioButtonDynamic_CheckedChanged);
+            // 
+            // radioButtonFollow
+            // 
+            this.radioButtonFollow.AutoSize = true;
+            this.radioButtonFollow.Location = new System.Drawing.Point(7, 43);
+            this.radioButtonFollow.Name = "radioButtonFollow";
+            this.radioButtonFollow.Size = new System.Drawing.Size(55, 17);
+            this.radioButtonFollow.TabIndex = 1;
+            this.radioButtonFollow.Text = "Follow";
+            this.radioButtonFollow.UseVisualStyleBackColor = true;
+            this.radioButtonFollow.CheckedChanged += new System.EventHandler(this.radioButtonFollow_CheckedChanged);
+            // 
             // radioButtonStatic
             // 
             this.radioButtonStatic.AutoSize = true;
@@ -177,27 +203,27 @@
             this.radioButtonStatic.UseVisualStyleBackColor = true;
             this.radioButtonStatic.CheckedChanged += new System.EventHandler(this.radioButtonStatic_CheckedChanged);
             // 
-            // radioButtonFollow
+            // groupBox1
             // 
-            this.radioButtonFollow.AutoSize = true;
-            this.radioButtonFollow.Location = new System.Drawing.Point(7, 43);
-            this.radioButtonFollow.Name = "radioButtonFollow";
-            this.radioButtonFollow.Size = new System.Drawing.Size(55, 17);
-            this.radioButtonFollow.TabIndex = 1;
-            this.radioButtonFollow.Text = "Follow";
-            this.radioButtonFollow.UseVisualStyleBackColor = true;
-            this.radioButtonFollow.CheckedChanged += new System.EventHandler(this.radioButtonFollow_CheckedChanged);
+            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(3, 247);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(220, 85);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Fog";
             // 
-            // radioButtonDynamic
+            // checkBox1
             // 
-            this.radioButtonDynamic.AutoSize = true;
-            this.radioButtonDynamic.Location = new System.Drawing.Point(7, 66);
-            this.radioButtonDynamic.Name = "radioButtonDynamic";
-            this.radioButtonDynamic.Size = new System.Drawing.Size(66, 17);
-            this.radioButtonDynamic.TabIndex = 2;
-            this.radioButtonDynamic.Text = "Dynamic";
-            this.radioButtonDynamic.UseVisualStyleBackColor = true;
-            this.radioButtonDynamic.CheckedChanged += new System.EventHandler(this.radioButtonDynamic_CheckedChanged);
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(7, 20);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(192, 17);
+            this.checkBox1.TabIndex = 0;
+            this.checkBox1.Text = "Fog (only for Phong shading model)";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
@@ -214,6 +240,8 @@
             this.shadingGroupBox.PerformLayout();
             this.groupBoxCamera.ResumeLayout(false);
             this.groupBoxCamera.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -231,6 +259,8 @@
         private System.Windows.Forms.RadioButton radioButtonDynamic;
         private System.Windows.Forms.RadioButton radioButtonFollow;
         private System.Windows.Forms.RadioButton radioButtonStatic;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

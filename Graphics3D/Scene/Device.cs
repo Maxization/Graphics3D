@@ -10,6 +10,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Graphics3D.ShadingModels;
 using Graphics3D.LightModels;
+using Graphics3D.Scene;
 
 namespace Graphics3D
 {
@@ -87,7 +88,7 @@ namespace Graphics3D
             }
         }
 
-        public void Render(Camera camera, ShadingModelEnum shadingType, ILightModel lightModel, params Mesh[] meshes)
+        public void Render(Camera camera, ShadingModelEnum shadingType, ILightModel lightModel, Fog fog, params Mesh[] meshes)
         {
             var viewMatrix = MatrixGenerator.LookAt(camera.Position, camera.Target, new Vector3D(0, 1, 0));
 
@@ -114,6 +115,8 @@ namespace Graphics3D
                         continue;
                     }
 
+
+
                     Vertex v1 = mesh.Vertices[face.A];
                     Vertex v2 = mesh.Vertices[face.B];
                     Vertex v3 = mesh.Vertices[face.C];
@@ -123,8 +126,8 @@ namespace Graphics3D
                     v2 = Project(v2, transformMatrix, worldMatrix);
                     v3 = Project(v3, transformMatrix, worldMatrix);
 
-                    IShadingModel sm = ShadingModelFactory.Create(shadingType);
-                    Painter.FillTriangle(v1, v2, v3, mesh.Color, sm, lightModel,camera.Position, this);
+                    IShadingModel sm = ShadingModelFactory.Create(shadingType, fog);
+                    Painter.FillTriangle(v1, v2, v3, mesh.Color, sm, lightModel, camera.Position, this);
 
                 }//);
             }
