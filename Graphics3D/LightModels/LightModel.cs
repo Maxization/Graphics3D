@@ -10,13 +10,15 @@ namespace Graphics3D.LightModels
     public struct Light
     {
         public Vector3D position;
+        public Vector3D target;
         public Color color;
+        public bool isReflector;
     }
 
     public interface ILightModel
     {
         double Ka { get; }
-        double GetColor(double Io, double Il, Vector3D l, Vector3D n, Vector3D v);
+        double GetColor(double Io, double Il, Vector3D l, Vector3D n, Vector3D v, Light light);
     }
     public class PhongLightModel : ILightModel
     {
@@ -77,14 +79,23 @@ namespace Graphics3D.LightModels
             Ks = ks;
             M = m;
         }
-        public double GetColor(double Io, double Il, Vector3D l, Vector3D n, Vector3D v)
+        public double GetColor(double Io, double Il, Vector3D l, Vector3D n, Vector3D v, Light light)
         {
             l.Normalize();
             n.Normalize();
             v.Normalize();
             Vector3D r = 2 * Vector3D.Dot(n, l) * n - l;
 
-            double Id = Kd * Io * Il * Vector3D.Dot(n, l);
+            if (light.isReflector)
+            {
+                Vector3D k = light.position - light.target;
+                k.Normalize();
+
+                Il = Il * Math.Pow(Vector3D.Dot(k, l), 5);
+            }
+
+
+            double Id = Kd * Io * Il;
             double Is = Ks * Io * Il * Math.Pow(Vector3D.Dot(v, r), m);
 
             return MathExtension.Clamp(Id + Is);

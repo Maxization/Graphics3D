@@ -69,9 +69,9 @@ namespace Graphics3D.ShadingModels
                 
                 for(int i=0;i<lights.Length;i++)
                 {
-                    double Ior = (ndotl[i] * color.R) / 255f;
-                    double Iog = (ndotl[i] * color.G) / 255f;
-                    double Iob = (ndotl[i] * color.B) / 255f;
+                    double Ior = (color.R / 255f) * ndotl[i];
+                    double Iog = (color.G / 255f) * ndotl[i];
+                    double Iob = (color.B / 255f) * ndotl[i];
 
                     double Ilr = lights[i].color.R / 255f;
                     double Ilg = lights[i].color.G / 255f;
@@ -81,9 +81,9 @@ namespace Graphics3D.ShadingModels
                     Vector3D n = vnFace;
                     Vector3D v = cameraPosition - centerPoint;
 
-                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v);
-                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v);
-                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v);
+                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v, lights[i]);
+                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v, lights[i]);
+                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v, lights[i]);
                 }
 
                 Ir += lightModel.Ka;
@@ -203,9 +203,9 @@ namespace Graphics3D.ShadingModels
                 {
                     double ndotl = MathExtension.Interpolate(snl[i], enl[i], gradient);
 
-                    double Ior = (ndotl * color.R) / 255f;
-                    double Iog = (ndotl * color.G) / 255f;
-                    double Iob = (ndotl * color.B) / 255f;
+                    double Ior = (color.R / 255f) * ndotl;
+                    double Iog = (color.G / 255f) * ndotl;
+                    double Iob = (color.B / 255f) * ndotl;
 
                     double Ilr = lights[i].color.R / 255f;
                     double Ilg = lights[i].color.G / 255f;
@@ -215,9 +215,9 @@ namespace Graphics3D.ShadingModels
                     Vector3D n = vnFace;
                     Vector3D v = cameraPosition - centerPoint;
 
-                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v);
-                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v);
-                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v);
+                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v, lights[i]);
+                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v, lights[i]);
+                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v, lights[i]);
                 }
 
                 Ir += lightModel.Ka;
@@ -283,9 +283,9 @@ namespace Graphics3D.ShadingModels
                 {
                     double ndotl = Vector3D.ComputeNDotL(worldCoord, normal, lights[i].position);
 
-                    double Ior = (ndotl * color.R) / 255f;
-                    double Iog = (ndotl * color.G) / 255f;
-                    double Iob = (ndotl * color.B) / 255f;
+                    double Ior = (color.R / 255f) * ndotl;
+                    double Iog = (color.G / 255f) * ndotl;
+                    double Iob = (color.B / 255f) * ndotl;
 
                     double Ilr = lights[i].color.R / 255f;
                     double Ilg = lights[i].color.G / 255f;
@@ -295,9 +295,9 @@ namespace Graphics3D.ShadingModels
                     Vector3D n = normal;
                     Vector3D v = cameraPosition - worldCoord;
 
-                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v);
-                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v);
-                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v);
+                    Ir += lightModel.GetColor(Ior, Ilr, l, n, v, lights[i]);
+                    Ig += lightModel.GetColor(Iog, Ilg, l, n, v, lights[i]);
+                    Ib += lightModel.GetColor(Iob, Ilb, l, n, v, lights[i]);
                 }
 
                 Ir += lightModel.Ka;
@@ -307,8 +307,6 @@ namespace Graphics3D.ShadingModels
                 Ir = MathExtension.Clamp(Ir);
                 Ig = MathExtension.Clamp(Ig);
                 Ib = MathExtension.Clamp(Ib);
-
-                
 
                 int R = (int)(Ir * 255);
                 int G = (int)(Ig * 255);

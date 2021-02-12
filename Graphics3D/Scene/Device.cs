@@ -18,7 +18,7 @@ namespace Graphics3D
     {
         private DirectBitmap bmp;
         private double[] zBuffer;
-        private object[] lockBuffer;
+        //private object[] lockBuffer;
 
         public int RenderWidth { get; }
         public int RenderHeight { get; }
@@ -30,9 +30,9 @@ namespace Graphics3D
             RenderHeight = bmp.Height;
 
             zBuffer = new double[RenderHeight * RenderWidth];
-            lockBuffer = new object[RenderHeight * RenderWidth];
-            for (int i = 0; i < lockBuffer.Length; i++)
-                lockBuffer[i] = new object();
+            //lockBuffer = new object[RenderHeight * RenderWidth];
+            //for (int i = 0; i < lockBuffer.Length; i++)
+            //    lockBuffer[i] = new object();
 
             Clear();
         }
@@ -76,7 +76,7 @@ namespace Graphics3D
 
             int index = (x + y * RenderWidth);
 
-            lock (lockBuffer[index])
+            //lock (lockBuffer[index])
             {
                 if (zBuffer[index] < z)
                 {
@@ -88,7 +88,7 @@ namespace Graphics3D
             }
         }
 
-        public void Render(Camera camera, ShadingModelEnum shadingType, ILightModel lightModel, Fog fog, params Mesh[] meshes)
+        public void Render(Camera camera, ShadingModelEnum shadingType, ILightModel lightModel, Light[] lights, Fog fog, params Mesh[] meshes)
         {
             var viewMatrix = MatrixGenerator.LookAt(camera.Position, camera.Target, new Vector3D(0, 1, 0));
 
@@ -127,7 +127,7 @@ namespace Graphics3D
                     v3 = Project(v3, transformMatrix, worldMatrix);
 
                     IShadingModel sm = ShadingModelFactory.Create(shadingType, fog);
-                    Painter.FillTriangle(v1, v2, v3, mesh.Color, sm, lightModel, camera.Position, this);
+                    Painter.FillTriangle(v1, v2, v3, mesh.Color, sm, lightModel, lights, camera.Position, this);
 
                 }//);
             }

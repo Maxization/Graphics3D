@@ -13,7 +13,7 @@ namespace Graphics3D
 {
     public static class Painter
     {
-        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, IShadingModel shadingModel, ILightModel lightModel, Vector3D cameraPosition, Device device)
+        public static void FillTriangle(Vertex v1, Vertex v2, Vertex v3, Color color, IShadingModel shadingModel, ILightModel lightModel, Light[] lights, Vector3D cameraPosition, Device device)
         {
             if (v1.Coordinates.Y > v2.Coordinates.Y)
             {
@@ -39,20 +39,6 @@ namespace Graphics3D
             Vector3D p1 = v1.Coordinates;
             Vector3D p2 = v2.Coordinates;
             Vector3D p3 = v3.Coordinates;
-
-            Light[] lights = new Light[]
-            {
-                new Light
-                {
-                    position = new Vector3D(10,15,5),
-                    color = Color.White
-                },
-                new Light
-                {
-                    position = new Vector3D(-10,15,5),
-                    color = Color.White
-                }
-            };
 
             shadingModel.CalculateConst(v1, v2, v3, lights);
 

@@ -19,6 +19,9 @@ namespace Graphics3D
         DirectBitmap bmp;
         Device device;
         Mesh[] meshes;
+        Light[] lights;
+        Light[] lights1;
+        Light[] lights2;
         Camera camera;
         Camera staticCamera;
         Camera followCamera;
@@ -27,6 +30,9 @@ namespace Graphics3D
         Fog fog;
         ShadingModelEnum shadingType;
         ILightModel lightModel;
+
+        bool isReflector;
+        bool rotation;
         public Form1()
         {
             InitializeComponent();
@@ -39,16 +45,43 @@ namespace Graphics3D
             shadingType = ShadingModelEnum.Flat;
             lightModel = new PhongLightModel(0.1, 0.5, 0.5, 20);
 
+            lights1 = new Light[]
+            {
+                new Light
+                {
+                    position = new Vector3D(10,15,5),
+                    color = Color.White
+                },
+                new Light
+                {
+                    position = new Vector3D(-10,15,5),
+                    color = Color.White
+                },
+            };
+
+            lights2 = new Light[]
+            {
+                new Light
+                {
+                    position = new Vector3D(1, 5, 0),
+                    target = new Vector3D(5, 0, reflectorZ),
+                    color = Color.FromArgb(255,99,71),
+                    isReflector = true,
+                }
+            };
+
+            lights = lights1;
+
             meshes[0].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y + 0.00001f, meshes[0].Rotation.Z);
             meshes[2].Rotation = new Vector3D(meshes[2].Rotation.X + Math.PI / 2, meshes[2].Rotation.Y, meshes[2].Rotation.Z);
             meshes[3].Rotation = new Vector3D(meshes[3].Rotation.X + Math.PI / 2, meshes[3].Rotation.Y, meshes[3].Rotation.Z);
             meshes[4].Rotation = new Vector3D(meshes[4].Rotation.X + Math.PI / 2, meshes[4].Rotation.Y, meshes[4].Rotation.Z);
 
-            meshes[0].Color = Color.Green;
-            meshes[1].Color = Color.Red;
-            meshes[2].Color = Color.Blue;
-            meshes[3].Color = Color.Blue;
-            meshes[4].Color = Color.Blue;
+            meshes[0].Color = Color.FromArgb(173, 255, 47);
+            meshes[1].Color = Color.FromArgb(250, 128, 114);
+            meshes[2].Color = Color.FromArgb(100, 149, 237);
+            meshes[3].Color = Color.FromArgb(100, 149, 237);
+            meshes[4].Color = Color.FromArgb(100, 149, 237);
 
             staticCamera = new Camera();
             staticCamera.Position = new Vector3D(0, 3, 5);
@@ -76,7 +109,7 @@ namespace Graphics3D
 
             device.Clear();
 
-            device.Render(camera, shadingType, lightModel, fog, meshes);
+            device.Render(camera, shadingType, lightModel, lights, fog, meshes);
 
             pictureBox1.Invalidate();
         }
@@ -84,6 +117,7 @@ namespace Graphics3D
 
         double pos_dx = 0.1f;
         double rot_dz = 0.05f;
+        double reflectorZ = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
             if(fog.isFog)
@@ -99,10 +133,19 @@ namespace Graphics3D
             }
 
             meshes[1].Position = new Vector3D(oldX + pos_dx, 0.5, 0);
-            meshes[1].Rotation = new Vector3D(meshes[0].Rotation.X, meshes[0].Rotation.Y, meshes[0].Rotation.Z + rot_dz);
+            meshes[1].Rotation = new Vector3D(meshes[1].Rotation.X, meshes[1].Rotation.Y, meshes[1].Rotation.Z + rot_dz);
+            if(rotation)
+                meshes[2].Rotation = new Vector3D(meshes[2].Rotation.X - 0.05f, meshes[2].Rotation.Y, meshes[2].Rotation.Z);
+
             followCamera.Target = meshes[1].Position;
             dynamicCamera.Position = new Vector3D(meshes[1].Position.X - 10, 15, meshes[1].Position.Z);
 
+            if(isReflector)
+            {
+                lights[0].position = new Vector3D(meshes[1].Position.X + 1, 5, 0);
+                lights[0].target = new Vector3D(meshes[1].Position.X + 5, 0, reflectorZ);
+            }
+            
             UpdateScreen();
         }
         private void radioButtonFlat_CheckedChanged(object sender, EventArgs e)
@@ -163,6 +206,43 @@ namespace Graphics3D
         {
             CheckBox button = sender as CheckBox;
             fog.ChangeState(button.Checked);
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            TrackBar trackBar = sender as TrackBar;
+            reflectorZ = trackBar.Value / 10f;
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox button = sender as CheckBox;
+            if(button.Checked)
+            {
+                lights = lights2;
+                isReflector = true;
+            }
+            else
+            {
+                lights = lights1;
+                isReflector = false;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            timer1.Enabled = true;
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox button = sender as CheckBox;
+            rotation = button.Checked;
         }
     }
 }
